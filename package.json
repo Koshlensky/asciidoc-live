@@ -1,6 +1,6 @@
 {
   "name": "asciidoc-live",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Full AsciiDoc renderer for Obsidian with live preview auto-refresh",
   "main": "main.js",
   "scripts": {

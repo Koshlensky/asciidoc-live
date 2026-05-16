@@ -1,5 +1,9 @@
 # AsciiDoc Live
 
+[![Obsidian Plugin](https://img.shields.io/badge/Obsidian-Plugin-7C3AED?style=flat&logo=obsidian)](https://obsidian.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Desktop Only](https://img.shields.io/badge/platform-desktop%20only-orange)]()
+
 AsciiDoc Live renders .adoc files natively with a live-updating preview that refreshes automatically while you type — no manual reload required.
 
 AsciiDoc Live bundles [Asciidoctor.js](https://asciidoctor.org) directly and handles `.adoc`, `.asciidoc`, and `.asc` files out of the box.
@@ -8,7 +12,7 @@ AsciiDoc Live bundles [Asciidoctor.js](https://asciidoctor.org) directly and han
 
 ## The problem this solves
 
-Other AsciiDoc tools render the file on open but do **not** update the preview while you edit. You have to manually trigger a reload every time you change something. Markdown files in Obsidian don't have this limitation — AsciiDoc Live brings the same behaviour to AsciiDoc.
+Other AsciiDoc tools render the file on open but do not update the preview while you edit. You have to manually trigger a reload every time you change something. Markdown files in Obsidian don't have this limitation — AsciiDoc Live brings the same behaviour to AsciiDoc.
 
 ---
 
