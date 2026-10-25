@@ -140,7 +140,9 @@ class AdocView extends TextFileView {
 
         // Find bar (Ctrl+F, works in both source and preview modes)
         this.buildFindBar(container);
-        this.containerEl.addEventListener('keydown', (e: KeyboardEvent) => {
+        // Listen on window (capture) so Ctrl+F works even when focus is not inside the view
+        this.registerDomEvent(window, 'keydown', (e: KeyboardEvent) => {
+            if (this.app.workspace.getActiveViewOfType(AdocView) !== this) return;
             const mod = e.ctrlKey || e.metaKey;
             if (mod && !e.shiftKey && !e.altKey && (e.code === 'KeyF' || e.key.toLowerCase() === 'f')) {
                 e.preventDefault();
@@ -153,7 +155,7 @@ class AdocView extends TextFileView {
                 e.preventDefault();
                 this.closeFind();
             }
-        }, true);
+        }, { capture: true });
 
         // ── Source editor ────────────────────────────────────────────────────
         this.sourceEl = container.createEl('textarea', { cls: 'adoc-source-editor' });
@@ -897,6 +899,17 @@ export default class AdocPlugin extends Plugin {
         this.registerExtensions(['adoc', 'asciidoc', 'asc'], VIEW_TYPE_ADOC);
 
         this.addSettingTab(new AdocSettingTab(this.app, this));
+
+        this.addCommand({
+            id: 'find-in-document',
+            name: 'Find in document',
+            checkCallback: (checking: boolean) => {
+                const view = this.app.workspace.getActiveViewOfType(AdocView);
+                if (!view) return false;
+                if (!checking) view.openFind();
+                return true;
+            },
+        });
 
         this.addCommand({
             id: 'new-adoc-note',

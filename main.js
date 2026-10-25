@@ -37503,7 +37503,8 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
     this.toolbarEl = container.createDiv({ cls: "adoc-toolbar" });
     this.buildToolbar();
     this.buildFindBar(container);
-    this.containerEl.addEventListener("keydown", (e2) => {
+    this.registerDomEvent(window, "keydown", (e2) => {
+      if (this.app.workspace.getActiveViewOfType(_AdocView) !== this) return;
       const mod = e2.ctrlKey || e2.metaKey;
       if (mod && !e2.shiftKey && !e2.altKey && (e2.code === "KeyF" || e2.key.toLowerCase() === "f")) {
         e2.preventDefault();
@@ -37516,7 +37517,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
         e2.preventDefault();
         this.closeFind();
       }
-    }, true);
+    }, { capture: true });
     this.sourceEl = container.createEl("textarea", { cls: "adoc-source-editor" });
     this.sourceEl.spellcheck = false;
     this.sourceEl.addEventListener("input", () => {
@@ -38158,6 +38159,16 @@ var AdocPlugin = class extends import_obsidian.Plugin {
     this.registerView(VIEW_TYPE_ADOC, (leaf) => new AdocView(leaf, this));
     this.registerExtensions(["adoc", "asciidoc", "asc"], VIEW_TYPE_ADOC);
     this.addSettingTab(new AdocSettingTab(this.app, this));
+    this.addCommand({
+      id: "find-in-document",
+      name: "Find in document",
+      checkCallback: (checking) => {
+        const view = this.app.workspace.getActiveViewOfType(AdocView);
+        if (!view) return false;
+        if (!checking) view.openFind();
+        return true;
+      }
+    });
     this.addCommand({
       id: "new-adoc-note",
       name: "New .adoc note",
