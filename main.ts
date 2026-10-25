@@ -54,6 +54,8 @@ class AdocView extends TextFileView {
     private plugin: AdocPlugin;
     private previewEl: HTMLDivElement;
     private sourceEl: HTMLTextAreaElement;
+    private sourceWrapEl: HTMLDivElement;
+    private mirrorEl: HTMLDivElement;
     private toolbarEl: HTMLDivElement;
     private mode: 'source' | 'preview';
     private debouncedRender: Debouncer<[], void>;
@@ -158,7 +160,11 @@ class AdocView extends TextFileView {
         }, { capture: true });
 
         // ── Source editor ────────────────────────────────────────────────────
-        this.sourceEl = container.createEl('textarea', { cls: 'adoc-source-editor' });
+        this.sourceWrapEl = container.createDiv({ cls: 'adoc-source-wrap' });
+        this.mirrorEl = this.sourceWrapEl.createDiv({ cls: 'adoc-source-mirror' });
+        this.sourceEl = this.sourceWrapEl.createEl('textarea', { cls: 'adoc-source-editor' });
+        this.sourceEl.addEventListener('scroll', () => this.syncMirrorScroll());
+        this.registerDomEvent(window, 'resize', () => { if (this.isFindOpen()) this.updateMirror(); });
         this.sourceEl.spellcheck = false;
 
         this.sourceEl.addEventListener('input', () => {
@@ -368,6 +374,7 @@ class AdocView extends TextFileView {
         this.sourceEl.style.whiteSpace   = this.softWrap ? 'pre-wrap' : 'pre';
         this.sourceEl.style.overflowWrap = this.softWrap ? 'break-word' : 'normal';
         this.sourceEl.style.overflowX    = this.softWrap ? 'hidden' : 'auto';
+        if (this.isFindOpen()) this.updateMirror();
         this.toolbarEl
             .querySelector<HTMLElement>('[data-action="wrap"]')
             ?.classList.toggle('is-active', this.softWrap);
@@ -450,7 +457,7 @@ class AdocView extends TextFileView {
     private applyModeDisplay(): void {
         const isSource = this.mode === 'source';
         this.previewEl.toggleClass('adoc-hidden', isSource);
-        this.sourceEl.toggleClass('adoc-hidden', !isSource);
+        this.sourceWrapEl.toggleClass('adoc-hidden', !isSource);
         this.toolbarEl.toggleClass('adoc-hidden', !isSource);
         if (isSource) {
             this.sourceEl.value = this.data ?? '';
@@ -717,6 +724,43 @@ class AdocView extends TextFileView {
         const hl = (CSS as unknown as { highlights?: Map<string, unknown> }).highlights;
         hl?.delete('adoc-find');
         hl?.delete('adoc-find-current');
+        this.mirrorEl?.empty();
+    }
+
+    // Paint all matches in the source textarea via a transparent mirror layer behind it
+    private updateMirror(): void {
+        const ta = this.sourceEl;
+        const m = this.mirrorEl;
+        m.empty();
+        if (this.mode !== 'source' || !this.findSourceHits.length) return;
+
+        const cs = getComputedStyle(ta);
+        for (const p of ['font-family', 'font-size', 'line-height', 'padding-top', 'padding-right',
+            'padding-bottom', 'padding-left', 'white-space', 'overflow-wrap', 'word-break',
+            'tab-size', 'letter-spacing']) {
+            m.style.setProperty(p, cs.getPropertyValue(p));
+        }
+        m.style.setProperty('width', `${ta.clientWidth}px`);
+        m.style.setProperty('height', `${ta.clientHeight}px`);
+
+        const text = ta.value;
+        const len = this.findInputEl.value.length;
+        let pos = 0;
+        this.findSourceHits.forEach((h, i) => {
+            m.appendText(text.slice(pos, h));
+            m.createEl('mark', {
+                cls: i === this.findIndex ? 'adoc-find-mark adoc-find-mark-current' : 'adoc-find-mark',
+                text: text.slice(h, h + len),
+            });
+            pos = h + len;
+        });
+        m.appendText(text.slice(pos) + '\n');
+        this.syncMirrorScroll();
+    }
+
+    private syncMirrorScroll(): void {
+        this.mirrorEl.scrollTop = this.sourceEl.scrollTop;
+        this.mirrorEl.scrollLeft = this.sourceEl.scrollLeft;
     }
 
     private runFind(reset: boolean): void {
@@ -791,6 +835,7 @@ class AdocView extends TextFileView {
                 ta.scrollTop = target;
             }
             ta.setSelectionRange(start, end);
+            this.updateMirror();
             return;
         }
 

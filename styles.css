@@ -96,7 +96,7 @@
     /* min 16px prevents iOS from zooming in on textarea focus */
     font-size: max(16px, var(--font-text-size));
     line-height: 1.7;
-    background: var(--background-primary);
+    background: transparent;
     color: var(--text-normal);
     white-space: pre;
     overflow-wrap: normal;
@@ -728,4 +728,33 @@
 ::highlight(adoc-find-current) {
     background-color: var(--text-selection, rgba(255, 140, 0, 0.7));
     color: inherit;
+}
+
+/* Source find highlights: transparent mirror layer behind the textarea */
+.adoc-source-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: var(--background-primary);
+}
+.adoc-source-wrap .adoc-source-editor {
+    position: relative;
+    height: 100%;
+}
+.adoc-source-mirror {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    box-sizing: border-box;
+    color: transparent;
+}
+.adoc-find-mark {
+    background: rgba(255, 208, 0, 0.45);
+    color: transparent;
+    border-radius: 2px;
+}
+.adoc-find-mark-current {
+    background: rgba(255, 140, 0, 0.8);
 }
