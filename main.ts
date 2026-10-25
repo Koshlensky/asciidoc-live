@@ -58,6 +58,14 @@ class AdocView extends TextFileView {
     private debouncedRender: Debouncer<[], void>;
     private softWrap = false;
 
+    // find-in-document state
+    private findBarEl: HTMLDivElement;
+    private findInputEl: HTMLInputElement;
+    private findCountEl: HTMLSpanElement;
+    private findIndex = 0;
+    private findRanges: Range[] = [];
+    private findSourceHits: number[] = [];
+
     constructor(leaf: WorkspaceLeaf, plugin: AdocPlugin) {
         super(leaf);
         this.plugin = plugin;
@@ -129,6 +137,23 @@ class AdocView extends TextFileView {
         this.toolbarEl = container.createEl('div', { cls: 'adoc-toolbar' });
         this.buildToolbar();
 
+        // Find bar (Ctrl+F, works in both source and preview modes)
+        this.buildFindBar(container);
+        this.containerEl.addEventListener('keydown', (e: KeyboardEvent) => {
+            const mod = e.ctrlKey || e.metaKey;
+            if (mod && !e.shiftKey && !e.altKey && (e.code === 'KeyF' || e.key.toLowerCase() === 'f')) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openFind();
+            } else if (e.key === 'F3' && this.isFindOpen()) {
+                e.preventDefault();
+                this.stepFind(e.shiftKey ? -1 : 1);
+            } else if (e.key === 'Escape' && this.isFindOpen()) {
+                e.preventDefault();
+                this.closeFind();
+            }
+        }, true);
+
         // ── Source editor ────────────────────────────────────────────────────
         this.sourceEl = container.createEl('textarea', { cls: 'adoc-source-editor' });
         this.sourceEl.spellcheck = false;
@@ -137,6 +162,7 @@ class AdocView extends TextFileView {
             this.data = this.sourceEl.value;
             this.requestSave();
             this.plugin.broadcastContentChange(this.file, this.data);
+            if (this.isFindOpen()) this.runFind(false);
         });
 
         // Intercept paste: if clipboard contains an image, save it to vault
@@ -153,7 +179,7 @@ class AdocView extends TextFileView {
         });
 
         // ── Preview pane ─────────────────────────────────────────────────────
-        this.previewEl = container.createEl('div', { cls: 'adoc-preview' });
+        this.previewEl = container.createEl('div', { cls: 'adoc-preview', attr: { tabindex: '-1' } });
 
         // ── Header toggle button ─────────────────────────────────────────────
         this.addAction('book-open', 'Toggle source / preview', () => this.toggleMode());
@@ -185,6 +211,7 @@ class AdocView extends TextFileView {
 
     onClose(): Promise<void> {
         this.plugin.unregisterAdocView(this);
+        this.clearFindHighlights();
         return Promise.resolve();
     }
 
@@ -428,6 +455,7 @@ class AdocView extends TextFileView {
         } else {
             if (this.data) this.renderPreview();
         }
+        if (this.isFindOpen()) this.runFind(false);
     }
 
     private renderPreview(): void {
@@ -439,7 +467,7 @@ class AdocView extends TextFileView {
                     showtitle: '',
                     icons: 'font',
                     'source-highlighter': 'highlight.js',
-                    stem: '',
+                    stem: '@',
                 },
             });
             const parsed = new DOMParser().parseFromString(html, 'text/html');
@@ -447,7 +475,8 @@ class AdocView extends TextFileView {
             Array.from(parsed.body.childNodes).forEach(n => this.previewEl.appendChild(n));
             this.resolveImages();
             this.handleLinks();
-            void this.renderMathFormulas();
+            void this.renderMathFormulas().then(() => { if (this.isFindOpen()) this.runFind(false); });
+            if (this.isFindOpen()) this.runFind(false);
 
             // If another view requested navigation to an anchor in this file, consume it
             const pending = this.plugin.pendingAnchor;
@@ -544,8 +573,9 @@ class AdocView extends TextFileView {
     // Flow: strip Asciidoctor delimiters → convert AsciiMath to TeX → renderMath → finishRenderMath
     private async renderMathFormulas(): Promise<void> {
         if (!this.previewEl) return;
-        if (!this.previewEl.querySelector('.stem, .stemblock')) return;
-
+        const hasBlocks = !!this.previewEl.querySelector('.stem, .stemblock');
+        const txt = this.previewEl.textContent ?? '';
+        if (!hasBlocks && !txt.includes('\\$') && !txt.includes('\\(')) return;
         // Wait for Obsidian's bundled MathJax to initialise (safe to call multiple times)
         await loadMathJax();
 
@@ -601,8 +631,10 @@ class AdocView extends TextFileView {
             }
         }
 
-        // Apply MathJax stylesheet for all rendered elements
-        await finishRenderMath();
+        // Inline stem:[], latexmath:[], asciimath:[] are emitted by Asciidoctor as raw
+        // \(...\) or \$...\$ text inside paragraphs, so replace those text runs.
+        this.renderInlineMath(toTypeset);
+        // Apply MathJax stylesheet for all rendered elements        await finishRenderMath();
 
         // For inline math: ensure MathJax processes the newly attached containers
         // by triggering a typeset pass if the MathJax 3 API is available
@@ -619,6 +651,199 @@ class AdocView extends TextFileView {
         }
     }
 
+    // ---- Find in document ----
+
+    private buildFindBar(container: HTMLElement): void {
+        this.findBarEl = container.createEl('div', { cls: 'adoc-find-bar adoc-hidden' });
+        this.findInputEl = this.findBarEl.createEl('input', {
+            cls: 'adoc-find-input',
+            attr: { type: 'text', placeholder: 'Find in document', spellcheck: 'false' },
+        });
+        this.findCountEl = this.findBarEl.createEl('span', { cls: 'adoc-find-count' });
+
+        const mk = (icon: string, title: string, fn: () => void) => {
+            const b = this.findBarEl.createEl('button', { cls: 'adoc-toolbar-btn', attr: { title } });
+            setIcon(b, icon);
+            b.addEventListener('mousedown', (e) => { e.preventDefault(); fn(); });
+        };
+        mk('chevron-up', 'Previous match (Shift+Enter)', () => this.stepFind(-1));
+        mk('chevron-down', 'Next match (Enter)', () => this.stepFind(1));
+        mk('x', 'Close (Esc)', () => this.closeFind());
+
+        this.findInputEl.addEventListener('input', () => this.runFind(true));
+        this.findInputEl.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.stepFind(e.shiftKey ? -1 : 1);
+            }
+        });
+    }
+
+    isFindOpen(): boolean {
+        return !!this.findBarEl && !this.findBarEl.hasClass('adoc-hidden');
+    }
+
+    openFind(): void {
+        if (!this.findBarEl) return;
+        let seed = '';
+        if (this.mode === 'source') {
+            const ta = this.sourceEl;
+            seed = ta.value.slice(ta.selectionStart, ta.selectionEnd);
+        } else {
+            seed = window.getSelection()?.toString() ?? '';
+        }
+        if (seed && !seed.includes('\n')) this.findInputEl.value = seed;
+        this.findBarEl.removeClass('adoc-hidden');
+        this.findInputEl.focus();
+        this.findInputEl.select();
+        this.runFind(true);
+    }
+
+    closeFind(): void {
+        if (!this.findBarEl) return;
+        this.findBarEl.addClass('adoc-hidden');
+        this.clearFindHighlights();
+        this.findRanges = [];
+        this.findSourceHits = [];
+        if (this.mode === 'source') this.sourceEl.focus();
+        else this.previewEl.focus();
+    }
+
+    private clearFindHighlights(): void {
+        const hl = (CSS as unknown as { highlights?: Map<string, unknown> }).highlights;
+        hl?.delete('adoc-find');
+        hl?.delete('adoc-find-current');
+    }
+
+    private runFind(reset: boolean): void {
+        const query = this.findInputEl.value;
+        this.clearFindHighlights();
+        this.findRanges = [];
+        this.findSourceHits = [];
+        if (!query) {
+            this.findCountEl.setText('');
+            return;
+        }
+        const needle = query.toLowerCase();
+
+        if (this.mode === 'source') {
+            const hay = this.sourceEl.value.toLowerCase();
+            let i = hay.indexOf(needle);
+            while (i !== -1) {
+                this.findSourceHits.push(i);
+                i = hay.indexOf(needle, i + Math.max(1, needle.length));
+            }
+            if (reset) {
+                const from = this.sourceEl.selectionStart;
+                const idx = this.findSourceHits.findIndex(p => p >= from);
+                this.findIndex = idx === -1 ? 0 : idx;
+            }
+        } else {
+            const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+            for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+                const parent = (n as Text).parentElement;
+                if (parent?.closest('mjx-container, script, style')) continue;
+                const text = (n.nodeValue ?? '').toLowerCase();
+                let i = text.indexOf(needle);
+                while (i !== -1) {
+                    const r = document.createRange();
+                    r.setStart(n, i);
+                    r.setEnd(n, i + needle.length);
+                    this.findRanges.push(r);
+                    i = text.indexOf(needle, i + Math.max(1, needle.length));
+                }
+            }
+            if (reset) this.findIndex = 0;
+        }
+
+        const total = this.mode === 'source' ? this.findSourceHits.length : this.findRanges.length;
+        if (this.findIndex >= total) this.findIndex = 0;
+        this.showFindCurrent(reset);
+    }
+
+    private stepFind(dir: 1 | -1): void {
+        const total = this.mode === 'source' ? this.findSourceHits.length : this.findRanges.length;
+        if (total === 0) { this.runFind(true); return; }
+        this.findIndex = (this.findIndex + dir + total) % total;
+        this.showFindCurrent(true);
+    }
+
+    private showFindCurrent(scroll: boolean): void {
+        const total = this.mode === 'source' ? this.findSourceHits.length : this.findRanges.length;
+        this.findCountEl.setText(total ? `${this.findIndex + 1}/${total}` : 'No results');
+        if (!total) return;
+
+        if (this.mode === 'source') {
+            const ta = this.sourceEl;
+            const start = this.findSourceHits[this.findIndex];
+            const end = start + this.findInputEl.value.length;
+            if (scroll) {
+                // Scroll the textarea so the match is roughly centred
+                const full = ta.value;
+                ta.value = full.slice(0, start);
+                ta.scrollTop = ta.scrollHeight;
+                const target = Math.max(0, ta.scrollTop - ta.clientHeight / 2);
+                ta.value = full;
+                ta.scrollTop = target;
+            }
+            ta.setSelectionRange(start, end);
+            return;
+        }
+
+        const HL = (window as unknown as { Highlight?: new (...r: Range[]) => unknown }).Highlight;
+        const hl = (CSS as unknown as { highlights?: Map<string, unknown> }).highlights;
+        if (HL && hl) {
+            hl.set('adoc-find', new HL(...this.findRanges));
+            hl.set('adoc-find-current', new HL(this.findRanges[this.findIndex]));
+        }
+        if (scroll) {
+            this.findRanges[this.findIndex].startContainer.parentElement
+                ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+    }
+    private renderInlineMath(toTypeset: HTMLElement[]): void {
+        const re = /\\\$([^\n]+?)\\\$|\\\(([^\n]+?)\\\)/g;
+        const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+        const nodes: Text[] = [];
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+            const t = n as Text;
+            const v = t.nodeValue ?? '';
+            if (!v.includes('\\$') && !v.includes('\\(')) continue;
+            if (t.parentElement?.closest('pre, code, .stemblock, mjx-container, script, style')) continue;
+            nodes.push(t);
+        }
+        for (const t of nodes) {
+            const v = t.nodeValue ?? '';
+            const frag = document.createDocumentFragment();
+            let last = 0;
+            let found = false;
+            re.lastIndex = 0;
+            for (let m = re.exec(v); m; m = re.exec(v)) {
+                let tex = (m[1] ?? m[2] ?? '').trim();
+                if (!tex) continue;
+                // \$...\$ is AsciiMath unless it already looks like LaTeX
+                if (m[1] !== undefined && !tex.includes('\\')) {
+                    try { tex = _am2tex.parse(tex); } catch { /* keep raw */ }
+                }
+                try {
+                    const rendered = renderMath(tex, false);
+                    frag.appendChild(document.createTextNode(v.slice(last, m.index)));
+                    const span = document.createElement('span');
+                    span.className = 'adoc-inline-math';
+                    span.appendChild(rendered);
+                    frag.appendChild(span);
+                    toTypeset.push(span);
+                    last = m.index + m[0].length;
+                    found = true;
+                } catch (e) {
+                    console.error('[AsciiDoc Live] inline renderMath error:', e, { tex });
+                }
+            }
+            if (!found) continue;
+            frag.appendChild(document.createTextNode(v.slice(last)));
+            t.replaceWith(frag);
+        }
+    }
     // Resolve image src attributes to vault resource URLs.
     // Tries relative path first (standard AsciiDoc), then absolute vault path.
     private resolveImages(): void {

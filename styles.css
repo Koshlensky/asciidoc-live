@@ -710,3 +710,28 @@
 .adoc-preview .teal    { color: #006060; } .adoc-preview .teal-background    { background: #80c0c0; }
 .adoc-preview .white   { color: #bfbfbf; } .adoc-preview .white-background   { background: #fafafa; }
 .adoc-preview .yellow  { color: #c0a000; } .adoc-preview .yellow-background  { background: #ffffa0; }
+
+/* Find bar (Ctrl+F) */
+.adoc-find-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    background: var(--background-secondary);
+}
+.adoc-find-input { flex: 1; max-width: 360px; }
+.adoc-find-count {
+    min-width: 64px;
+    font-size: var(--font-ui-smaller);
+    color: var(--text-muted);
+}
+::highlight(adoc-find) {
+    background-color: var(--text-highlight-bg, rgba(255, 208, 0, 0.4));
+    color: inherit;
+}
+::highlight(adoc-find-current) {
+    background-color: var(--text-selection, rgba(255, 140, 0, 0.7));
+    color: inherit;
+}

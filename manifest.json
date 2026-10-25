@@ -1,10 +1,10 @@
 {
-  "id": "asciidoc-live",
-  "name": "AsciiDoc Live",
-  "version": "1.0.1",
-  "minAppVersion": "1.4.0",
-  "description": "Full AsciiDoc renderer with live-updating preview for .adoc files.",
-  "author": "Nick Koshlensky",
-  "authorUrl": "https://github.com/Koshlensky",
-  "isDesktopOnly": false
+	"id": "asciidoc-live",
+	"name": "AsciiDoc Live",
+	"version": "1.1.0",
+	"minAppVersion": "1.4.0",
+	"description": "Full AsciiDoc renderer with live-updating preview for .adoc files.",
+	"author": "Nick Koshlensky",
+	"authorUrl": "https://github.com/Koshlensky",
+	"isDesktopOnly": false
 }

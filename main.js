@@ -26175,71 +26175,71 @@ function Asciidoctor(moduleConfig) {
         $const_set($nesting3[0], "TableCellVertAlignments", $hash2(["<", ">", "^"], { "<": "top", ">": "bottom", "^": "middle" }));
         $const_set($nesting3[0], "TableCellStyles", $hash2(["d", "s", "e", "m", "h", "l", "a"], { "d": "none", "s": "strong", "e": "emphasis", "m": "monospaced", "h": "header", "l": "literal", "a": "asciidoc" }));
         self2.$private_class_method("new");
-        $defs(self2, "$parse", function $$parse(reader, document, options) {
+        $defs(self2, "$parse", function $$parse(reader, document2, options) {
           var $a, $b, self3 = this, block_attributes = nil, header_only = nil, new_section = nil;
           if (options == null) options = $hash2([], {});
-          block_attributes = self3.$parse_document_header(reader, document, header_only = options["$[]"]("header_only"));
+          block_attributes = self3.$parse_document_header(reader, document2, header_only = options["$[]"]("header_only"));
           if (!$truthy(header_only)) {
             while ($truthy(reader["$has_more_lines?"]())) {
-              $b = self3.$next_section(reader, document, block_attributes), $a = $to_ary($b), new_section = $a[0] == null ? nil : $a[0], block_attributes = $a[1] == null ? nil : $a[1], $b;
+              $b = self3.$next_section(reader, document2, block_attributes), $a = $to_ary($b), new_section = $a[0] == null ? nil : $a[0], block_attributes = $a[1] == null ? nil : $a[1], $b;
               if ($truthy(new_section)) {
-                document.$assign_numeral(new_section);
-                document.$blocks()["$<<"](new_section);
+                document2.$assign_numeral(new_section);
+                document2.$blocks()["$<<"](new_section);
               }
               ;
             }
           }
           ;
-          return document;
+          return document2;
         }, -3);
-        $defs(self2, "$parse_document_header", function $$parse_document_header(reader, document, header_only) {
+        $defs(self2, "$parse_document_header", function $$parse_document_header(reader, document2, header_only) {
           var $a, $b, $c, self3 = this, block_attrs = nil, doc_attrs = nil, implicit_doctitle = nil, val = nil, doctitle_attr_val = nil, source_location = nil, _ = nil, l0_section_title = nil, atx = nil, separator = nil, doc_id = nil, role = nil, reftext = nil, modified_attrs = nil, author = nil, author_metadata = nil;
           if (header_only == null) header_only = false;
-          block_attrs = $truthy(reader.$skip_blank_lines()) ? self3.$parse_block_metadata_lines(reader, document) : $hash2([], {});
-          doc_attrs = document.$attributes();
+          block_attrs = $truthy(reader.$skip_blank_lines()) ? self3.$parse_block_metadata_lines(reader, document2) : $hash2([], {});
+          doc_attrs = document2.$attributes();
           if ($truthy(implicit_doctitle = self3["$is_next_line_doctitle?"](reader, block_attrs, doc_attrs["$[]"]("leveloffset"))) && $truthy(block_attrs["$[]"]("title"))) {
             doc_attrs["$[]="]("authorcount", 0);
-            return document.$finalize_header(block_attrs, false);
+            return document2.$finalize_header(block_attrs, false);
           }
           ;
           if (!$truthy((val = doc_attrs["$[]"]("doctitle"))["$nil_or_empty?"]())) {
-            document["$title="](doctitle_attr_val = val);
+            document2["$title="](doctitle_attr_val = val);
           }
           ;
           if ($truthy(implicit_doctitle)) {
-            if ($truthy(document.$sourcemap())) {
+            if ($truthy(document2.$sourcemap())) {
               source_location = reader.$cursor();
             }
             ;
-            $b = self3.$parse_section_title(reader, document), $a = $to_ary($b), $c = [$a[0] == null ? nil : $a[0]], $send(document, "id=", $c), $c[$c.length - 1], _ = $a[1] == null ? nil : $a[1], l0_section_title = $a[2] == null ? nil : $a[2], _ = $a[3] == null ? nil : $a[3], atx = $a[4] == null ? nil : $a[4], $b;
+            $b = self3.$parse_section_title(reader, document2), $a = $to_ary($b), $c = [$a[0] == null ? nil : $a[0]], $send(document2, "id=", $c), $c[$c.length - 1], _ = $a[1] == null ? nil : $a[1], l0_section_title = $a[2] == null ? nil : $a[2], _ = $a[3] == null ? nil : $a[3], atx = $a[4] == null ? nil : $a[4], $b;
             if ($truthy(doctitle_attr_val)) {
               l0_section_title = nil;
             } else {
-              document["$title="](l0_section_title);
-              if ($truthy(($a = ["doctitle", doctitle_attr_val = document.$sub_specialchars(l0_section_title)], $send(doc_attrs, "[]=", $a), $a[$a.length - 1])["$include?"]($$("ATTR_REF_HEAD")))) {
-                doc_attrs["$[]="]("doctitle", doctitle_attr_val = document.$sub_attributes(doctitle_attr_val, $hash2(["attribute_missing"], { "attribute_missing": "skip" })));
+              document2["$title="](l0_section_title);
+              if ($truthy(($a = ["doctitle", doctitle_attr_val = document2.$sub_specialchars(l0_section_title)], $send(doc_attrs, "[]=", $a), $a[$a.length - 1])["$include?"]($$("ATTR_REF_HEAD")))) {
+                doc_attrs["$[]="]("doctitle", doctitle_attr_val = document2.$sub_attributes(doctitle_attr_val, $hash2(["attribute_missing"], { "attribute_missing": "skip" })));
               }
               ;
             }
             ;
             if ($truthy(source_location)) {
-              document.$header()["$source_location="](source_location);
+              document2.$header()["$source_location="](source_location);
             }
             ;
-            if (!($truthy(atx) || $truthy(document["$attribute_locked?"]("compat-mode")))) {
+            if (!($truthy(atx) || $truthy(document2["$attribute_locked?"]("compat-mode")))) {
               doc_attrs["$[]="]("compat-mode", "");
             }
             ;
             if ($truthy(separator = block_attrs["$[]"]("separator"))) {
-              if (!$truthy(document["$attribute_locked?"]("title-separator"))) {
+              if (!$truthy(document2["$attribute_locked?"]("title-separator"))) {
                 doc_attrs["$[]="]("title-separator", separator);
               }
             }
             ;
             if ($truthy(doc_id = block_attrs["$[]"]("id"))) {
-              document["$id="](doc_id);
+              document2["$id="](doc_id);
             } else {
-              doc_id = document.$id();
+              doc_id = document2.$id();
             }
             ;
             if ($truthy(role = block_attrs["$[]"]("role"))) {
@@ -26251,20 +26251,20 @@ function Asciidoctor(moduleConfig) {
             }
             ;
             block_attrs.$clear();
-            (modified_attrs = document.$instance_variable_get("@attributes_modified")).$delete("doctitle");
-            self3.$parse_header_metadata(reader, document, nil);
+            (modified_attrs = document2.$instance_variable_get("@attributes_modified")).$delete("doctitle");
+            self3.$parse_header_metadata(reader, document2, nil);
             if ($truthy(modified_attrs["$include?"]("doctitle"))) {
               if ($truthy((val = doc_attrs["$[]"]("doctitle"))["$nil_or_empty?"]()) || $eqeq(val, doctitle_attr_val)) {
                 doc_attrs["$[]="]("doctitle", doctitle_attr_val);
               } else {
-                document["$title="](val);
+                document2["$title="](val);
               }
             } else if ($not(l0_section_title)) {
               modified_attrs["$<<"]("doctitle");
             }
             ;
             if ($truthy(doc_id)) {
-              document.$register("refs", [doc_id, document]);
+              document2.$register("refs", [doc_id, document2]);
             }
             ;
           } else if ($truthy(author = doc_attrs["$[]"]("author"))) {
@@ -26281,18 +26281,18 @@ function Asciidoctor(moduleConfig) {
             doc_attrs["$[]="]("authorcount", 0);
           }
           ;
-          if ($eqeq(document.$doctype(), "manpage")) {
-            self3.$parse_manpage_header(reader, document, block_attrs, header_only);
+          if ($eqeq(document2.$doctype(), "manpage")) {
+            self3.$parse_manpage_header(reader, document2, block_attrs, header_only);
           }
           ;
-          return document.$finalize_header(block_attrs);
+          return document2.$finalize_header(block_attrs);
         }, -3);
-        $defs(self2, "$parse_manpage_header", function $$parse_manpage_header(reader, document, block_attributes, header_only) {
+        $defs(self2, "$parse_manpage_header", function $$parse_manpage_header(reader, document2, block_attributes, header_only) {
           var $a, self3 = this, doc_attrs = nil, manvolnum = nil, mantitle = nil, $ret_or_1 = nil, $ret_or_2 = nil, manname = nil, name_section_level = nil, name_section = nil, name_section_buffer = nil, mannames = nil, manpurpose = nil, error_msg = nil;
           if (header_only == null) header_only = false;
-          if ($truthy($$("ManpageTitleVolnumRx")["$=~"]((doc_attrs = document.$attributes())["$[]"]("doctitle")))) {
+          if ($truthy($$("ManpageTitleVolnumRx")["$=~"]((doc_attrs = document2.$attributes())["$[]"]("doctitle")))) {
             doc_attrs["$[]="]("manvolnum", manvolnum = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2));
-            doc_attrs["$[]="]("mantitle", ($truthy((mantitle = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](1))["$include?"]($$("ATTR_REF_HEAD"))) ? document.$sub_attributes(mantitle) : mantitle).$downcase());
+            doc_attrs["$[]="]("mantitle", ($truthy((mantitle = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](1))["$include?"]($$("ATTR_REF_HEAD"))) ? document2.$sub_attributes(mantitle) : mantitle).$downcase());
           } else {
             self3.$logger().$error(self3.$message_with_context("non-conforming manpage title", $hash2(["source_location"], { "source_location": reader.$cursor_at_line(1) })));
             doc_attrs["$[]="]("mantitle", $truthy($ret_or_1 = $truthy($ret_or_2 = doc_attrs["$[]"]("doctitle")) ? $ret_or_2 : doc_attrs["$[]"]("docname")) ? $ret_or_1 : "command");
@@ -26307,7 +26307,7 @@ function Asciidoctor(moduleConfig) {
             }
             ;
             doc_attrs["$[]="]("mannames", [manname]);
-            if ($eqeq(document.$backend(), "manpage")) {
+            if ($eqeq(document2.$backend(), "manpage")) {
               doc_attrs["$[]="]("docname", manname);
               doc_attrs["$[]="]("outfilesuffix", "." + manvolnum);
             }
@@ -26315,17 +26315,17 @@ function Asciidoctor(moduleConfig) {
           } else if (!$truthy(header_only)) {
             reader.$skip_blank_lines();
             reader.$save();
-            block_attributes.$update(self3.$parse_block_metadata_lines(reader, document));
+            block_attributes.$update(self3.$parse_block_metadata_lines(reader, document2));
             if ($truthy(name_section_level = self3["$is_next_line_section?"](reader, $hash2([], {})))) {
               if ($eqeq(name_section_level, 1)) {
-                name_section = self3.$initialize_section(reader, document, $hash2([], {}));
+                name_section = self3.$initialize_section(reader, document2, $hash2([], {}));
                 name_section_buffer = $send(reader.$read_lines_until($hash2(["break_on_blank_lines", "skip_line_comments"], { "break_on_blank_lines": true, "skip_line_comments": true })), "map", [], function $$4(l) {
                   if (l == null) l = nil;
                   return l.$lstrip();
                 }).$join(" ");
                 if ($truthy($$("ManpageNamePurposeRx")["$=~"](name_section_buffer))) {
                   if ($truthy((manname = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](1))["$include?"]($$("ATTR_REF_HEAD")))) {
-                    manname = document.$sub_attributes(manname);
+                    manname = document2.$sub_attributes(manname);
                   }
                   ;
                   if ($truthy(manname["$include?"](","))) {
@@ -26338,7 +26338,7 @@ function Asciidoctor(moduleConfig) {
                   }
                   ;
                   if ($truthy((manpurpose = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2))["$include?"]($$("ATTR_REF_HEAD")))) {
-                    manpurpose = document.$sub_attributes(manpurpose);
+                    manpurpose = document2.$sub_attributes(manpurpose);
                   }
                   ;
                   if ($truthy($ret_or_1 = doc_attrs["$[]"]("manname-title"))) {
@@ -26354,7 +26354,7 @@ function Asciidoctor(moduleConfig) {
                   doc_attrs["$[]="]("manname", manname);
                   doc_attrs["$[]="]("mannames", mannames);
                   doc_attrs["$[]="]("manpurpose", manpurpose);
-                  if ($eqeq(document.$backend(), "manpage")) {
+                  if ($eqeq(document2.$backend(), "manpage")) {
                     doc_attrs["$[]="]("docname", manname);
                     doc_attrs["$[]="]("outfilesuffix", "." + manvolnum);
                   }
@@ -26375,7 +26375,7 @@ function Asciidoctor(moduleConfig) {
               self3.$logger().$error(self3.$message_with_context(error_msg, $hash2(["source_location"], { "source_location": reader.$cursor() })));
               doc_attrs["$[]="]("manname", manname = $truthy($ret_or_1 = doc_attrs["$[]"]("docname")) ? $ret_or_1 : "command");
               doc_attrs["$[]="]("mannames", [manname]);
-              if ($eqeq(document.$backend(), "manpage")) {
+              if ($eqeq(document2.$backend(), "manpage")) {
                 doc_attrs["$[]="]("docname", manname);
                 doc_attrs["$[]="]("outfilesuffix", "." + manvolnum);
               }
@@ -26389,11 +26389,11 @@ function Asciidoctor(moduleConfig) {
           return nil;
         }, -4);
         $defs(self2, "$next_section", function $$next_section(reader, parent, attributes) {
-          var $a, $b, self3 = this, preamble = nil, intro = nil, part = nil, has_header = nil, book = nil, document = nil, section = nil, current_level = nil, expected_next_level = nil, expected_next_level_alt = nil, title = nil, sectname = nil, next_level = nil, expected_condition = nil, new_section = nil, block_cursor = nil, new_block = nil, $ret_or_1 = nil, first_block = nil, child_block = nil;
+          var $a, $b, self3 = this, preamble = nil, intro = nil, part = nil, has_header = nil, book = nil, document2 = nil, section = nil, current_level = nil, expected_next_level = nil, expected_next_level_alt = nil, title = nil, sectname = nil, next_level = nil, expected_condition = nil, new_section = nil, block_cursor = nil, new_block = nil, $ret_or_1 = nil, first_block = nil, child_block = nil;
           if (attributes == null) attributes = $hash2([], {});
           preamble = intro = part = false;
           if ($eqeq(parent.$context(), "document") && $truthy(parent.$blocks()["$empty?"]()) && ($truthy(has_header = parent["$header?"]()) || $truthy(attributes.$delete("invalid-header")) || $not(self3["$is_next_line_section?"](reader, attributes)))) {
-            book = (document = parent).$doctype()["$=="]("book");
+            book = (document2 = parent).$doctype()["$=="]("book");
             if ($truthy(has_header) || $truthy(book) && $neqeq(attributes["$[]"](1), "abstract")) {
               preamble = intro = $$("Block").$new(parent, "preamble", $hash2(["content_model"], { "content_model": "compound" }));
               if ($truthy(book) && $truthy(parent["$attr?"]("preface-title"))) {
@@ -26414,7 +26414,7 @@ function Asciidoctor(moduleConfig) {
             }
             ;
           } else {
-            book = (document = parent.$document()).$doctype()["$=="]("book");
+            book = (document2 = parent.$document()).$doctype()["$=="]("book");
             section = self3.$initialize_section(reader, parent, attributes);
             attributes = $truthy(title = attributes["$[]"]("title")) ? $hash2(["title"], { "title": title }) : $hash2([], {});
             expected_next_level = $rb_plus(current_level = section.$level(), 1);
@@ -26430,10 +26430,10 @@ function Asciidoctor(moduleConfig) {
           ;
           reader.$skip_blank_lines();
           while ($truthy(reader["$has_more_lines?"]())) {
-            self3.$parse_block_metadata_lines(reader, document, attributes);
+            self3.$parse_block_metadata_lines(reader, document2, attributes);
             if ($truthy(next_level = self3["$is_next_line_section?"](reader, attributes))) {
-              if ($truthy(document["$attr?"]("leveloffset"))) {
-                next_level = $rb_plus(next_level, document.$attr("leveloffset").$to_i());
+              if ($truthy(document2["$attr?"]("leveloffset"))) {
+                next_level = $rb_plus(next_level, document2.$attr("leveloffset").$to_i());
                 if ($truthy($rb_lt(next_level, 0))) {
                   next_level = 0;
                 }
@@ -26453,7 +26453,7 @@ function Asciidoctor(moduleConfig) {
                 $b = self3.$next_section(reader, section, attributes), $a = $to_ary($b), new_section = $a[0] == null ? nil : $a[0], attributes = $a[1] == null ? nil : $a[1], $b;
                 section.$assign_numeral(new_section);
                 section.$blocks()["$<<"](new_section);
-              } else if ($eqeq(next_level, 0) && $eqeq(section, document)) {
+              } else if ($eqeq(next_level, 0) && $eqeq(section, document2)) {
                 if (!$truthy(book)) {
                   self3.$logger().$error(self3.$message_with_context("level 0 sections can only be used when doctype is book", $hash2(["source_location"], { "source_location": reader.$cursor() })));
                 }
@@ -26523,26 +26523,26 @@ function Asciidoctor(moduleConfig) {
             }
           } else if ($truthy(preamble)) {
             if ($truthy(preamble["$blocks?"]())) {
-              if ($truthy(book) || $truthy(document.$blocks()["$[]"](1)) || $not($$("Compliance").$unwrap_standalone_preamble())) {
-                if ($truthy(document.$sourcemap())) {
+              if ($truthy(book) || $truthy(document2.$blocks()["$[]"](1)) || $not($$("Compliance").$unwrap_standalone_preamble())) {
+                if ($truthy(document2.$sourcemap())) {
                   preamble["$source_location="](preamble.$blocks()["$[]"](0).$source_location());
                 }
               } else {
-                document.$blocks().$shift();
+                document2.$blocks().$shift();
                 while ($truthy(child_block = preamble.$blocks().$shift())) {
-                  document["$<<"](child_block);
+                  document2["$<<"](child_block);
                 }
                 ;
               }
             } else {
-              document.$blocks().$shift();
+              document2.$blocks().$shift();
             }
           }
           ;
           return [$eqeq(section, parent) ? nil : section, attributes.$merge()];
         }, -3);
         $defs(self2, "$next_block", function $$next_block(reader, parent, attributes, options) {
-          var $a, $b, self3 = this, skipped = nil, text_only = nil, document = nil, $ret_or_1 = nil, extensions = nil, block_extensions = nil, block_macro_extensions = nil, this_line = nil, doc_attrs = nil, style = nil, block = nil, block_context = nil, cloaked_context = nil, terminator = nil, delimited_block = nil, indented = nil, md_syntax = nil, ch0 = nil, layout_break_chars = nil, ll = nil, blk_ctx = nil, target = nil, blk_attrs = nil, posattrs = nil, expanded_target = nil, $ret_or_2 = nil, scaledwidth = nil, block_title = nil, extension = nil, report_unknown_block_macro = nil, content = nil, ext_config = nil, default_attrs = nil, float_id = nil, float_reftext = nil, float_level = nil, lines = nil, content_adjacent = nil, admonition_name = nil, credit_line = nil, attribution = nil, citetitle = nil, language = nil, comma_idx = nil, block_cursor = nil, block_reader = nil, content_model = nil, positional_attrs = nil, block_id = nil;
+          var $a, $b, self3 = this, skipped = nil, text_only = nil, document2 = nil, $ret_or_1 = nil, extensions = nil, block_extensions = nil, block_macro_extensions = nil, this_line = nil, doc_attrs = nil, style = nil, block = nil, block_context = nil, cloaked_context = nil, terminator = nil, delimited_block = nil, indented = nil, md_syntax = nil, ch0 = nil, layout_break_chars = nil, ll = nil, blk_ctx = nil, target = nil, blk_attrs = nil, posattrs = nil, expanded_target = nil, $ret_or_2 = nil, scaledwidth = nil, block_title = nil, extension = nil, report_unknown_block_macro = nil, content = nil, ext_config = nil, default_attrs = nil, float_id = nil, float_reftext = nil, float_level = nil, lines = nil, content_adjacent = nil, admonition_name = nil, credit_line = nil, attribution = nil, citetitle = nil, language = nil, comma_idx = nil, block_cursor = nil, block_reader = nil, content_model = nil, positional_attrs = nil, block_id = nil;
           if ($gvars["~"] == null) $gvars["~"] = nil;
           if (attributes == null) attributes = $hash2([], {});
           if (options == null) options = $hash2([], {});
@@ -26555,9 +26555,9 @@ function Asciidoctor(moduleConfig) {
             text_only = nil;
           }
           ;
-          document = parent.$document();
+          document2 = parent.$document();
           if ($truthy(options.$fetch("parse_metadata", true))) {
-            while ($truthy(self3.$parse_block_metadata_line(reader, document, attributes, options))) {
+            while ($truthy(self3.$parse_block_metadata_line(reader, document2, attributes, options))) {
               reader.$shift();
               if ($truthy($ret_or_1 = reader.$skip_blank_lines())) {
                 $ret_or_1;
@@ -26568,12 +26568,12 @@ function Asciidoctor(moduleConfig) {
             }
           }
           ;
-          if ($truthy(extensions = document.$extensions())) {
+          if ($truthy(extensions = document2.$extensions())) {
             $a = [extensions["$blocks?"](), extensions["$block_macros?"]()], block_extensions = $a[0], block_macro_extensions = $a[1], $a;
           }
           ;
           reader.$mark();
-          $a = [reader.$read_line(), document.$attributes(), attributes["$[]"](1)], this_line = $a[0], doc_attrs = $a[1], style = $a[2], $a;
+          $a = [reader.$read_line(), document2.$attributes(), attributes["$[]"](1)], this_line = $a[0], doc_attrs = $a[1], style = $a[2], $a;
           block = block_context = cloaked_context = terminator = nil;
           if ($truthy(delimited_block = self3["$is_delimited_block?"](this_line, true))) {
             block_context = cloaked_context = delimited_block.$context();
@@ -26660,7 +26660,7 @@ function Asciidoctor(moduleConfig) {
                       }
                       ;
                       if ($eqeq(blk_ctx, "image")) {
-                        document.$register("images", target);
+                        document2.$register("images", target);
                         attributes["$[]="]("imagesdir", doc_attrs["$[]"]("imagesdir"));
                         if ($truthy($ret_or_1 = attributes["$[]"]("alt"))) {
                           $ret_or_1;
@@ -26704,7 +26704,7 @@ function Asciidoctor(moduleConfig) {
                         ;
                         if ($eqeq((ext_config = extension.$config())["$[]"]("content_model"), "attributes")) {
                           if ($truthy(content)) {
-                            document.$parse_attributes(content, $truthy($ret_or_1 = $truthy($ret_or_2 = ext_config["$[]"]("positional_attrs")) ? $ret_or_2 : ext_config["$[]"]("pos_attrs")) ? $ret_or_1 : [], $hash2(["sub_input", "into"], { "sub_input": true, "into": attributes }));
+                            document2.$parse_attributes(content, $truthy($ret_or_1 = $truthy($ret_or_2 = ext_config["$[]"]("positional_attrs")) ? $ret_or_2 : ext_config["$[]"]("pos_attrs")) ? $ret_or_1 : [], $hash2(["sub_input", "into"], { "sub_input": true, "into": attributes }));
                           }
                         } else {
                           attributes["$[]="]("text", $truthy($ret_or_1 = content) ? $ret_or_1 : "");
@@ -26736,7 +26736,7 @@ function Asciidoctor(moduleConfig) {
               ;
               if ($not(indented) && $eqeq(ch0 = $truthy($ret_or_1 = ch0) ? $ret_or_1 : this_line.$chr(), "<") && $truthy($$("CalloutListRx")["$=~"](this_line))) {
                 reader.$unshift_line(this_line);
-                block = self3.$parse_callout_list(reader, $gvars["~"], parent, document.$callouts());
+                block = self3.$parse_callout_list(reader, $gvars["~"], parent, document2.$callouts());
                 attributes["$[]="]("style", "arabic");
                 break;
               } else if ($truthy($$("UnorderedListRx")["$match?"](this_line))) {
@@ -26761,7 +26761,7 @@ function Asciidoctor(moduleConfig) {
                 break;
               } else if (($eqeq(style, "float") || $eqeq(style, "discrete")) && $truthy($truthy($$("Compliance").$underline_style_section_titles()) ? self3["$is_section_title?"](this_line, reader.$peek_line()) : $truthy($ret_or_1 = indented["$!"]()) ? self3["$atx_section_title?"](this_line) : $ret_or_1)) {
                 reader.$unshift_line(this_line);
-                $b = self3.$parse_section_title(reader, document, attributes["$[]"]("id")), $a = $to_ary($b), float_id = $a[0] == null ? nil : $a[0], float_reftext = $a[1] == null ? nil : $a[1], block_title = $a[2] == null ? nil : $a[2], float_level = $a[3] == null ? nil : $a[3], $b;
+                $b = self3.$parse_section_title(reader, document2, attributes["$[]"]("id")), $a = $to_ary($b), float_id = $a[0] == null ? nil : $a[0], float_reftext = $a[1] == null ? nil : $a[1], block_title = $a[2] == null ? nil : $a[2], float_level = $a[3] == null ? nil : $a[3], $b;
                 if ($truthy(float_reftext)) {
                   attributes["$[]="]("reftext", float_reftext);
                 }
@@ -26769,7 +26769,7 @@ function Asciidoctor(moduleConfig) {
                 block = $$("Block").$new(parent, "floating_title", $hash2(["content_model"], { "content_model": "empty" }));
                 block["$title="](block_title);
                 attributes.$delete("title");
-                block["$id="]($truthy($ret_or_1 = float_id) ? $ret_or_1 : $truthy(doc_attrs["$key?"]("sectids")) ? $$("Section").$generate_id(block.$title(), document) : nil);
+                block["$id="]($truthy($ret_or_1 = float_id) ? $ret_or_1 : $truthy(doc_attrs["$key?"]("sectids")) ? $$("Section").$generate_id(block.$title(), document2) : nil);
                 block["$level="](float_level);
                 break;
               } else if ($truthy(style) && $neqeq(style, "normal")) {
@@ -26886,7 +26886,7 @@ function Asciidoctor(moduleConfig) {
                   block = $$("Block").$new(parent, "paragraph", $hash2(["content_model", "source", "attributes"], { "content_model": "simple", "source": lines, "attributes": attributes }));
                 }
                 ;
-                self3.$catalog_inline_anchors(lines.$join($$("LF")), block, document, reader);
+                self3.$catalog_inline_anchors(lines.$join($$("LF")), block, document2, reader);
               }
               ;
               break;
@@ -27061,7 +27061,7 @@ function Asciidoctor(moduleConfig) {
             }
           }
           ;
-          if ($truthy(document.$sourcemap())) {
+          if ($truthy(document2.$sourcemap())) {
             block["$source_location="](reader.$cursor_at_mark());
           }
           ;
@@ -27079,7 +27079,7 @@ function Asciidoctor(moduleConfig) {
               block.$title();
             }
             ;
-            if (!$truthy(document.$register("refs", [block_id, block]))) {
+            if (!$truthy(document2.$register("refs", [block_id, block]))) {
               self3.$logger().$warn(self3.$message_with_context("id assigned to block already in use: " + block_id, $hash2(["source_location"], { "source_location": reader.$cursor_at_mark() })));
             }
             ;
@@ -27091,7 +27091,7 @@ function Asciidoctor(moduleConfig) {
           ;
           block.$commit_subs();
           if ($truthy(block["$sub?"]("callouts"))) {
-            if (!$truthy(self3.$catalog_callouts(block.$source(), document))) {
+            if (!$truthy(self3.$catalog_callouts(block.$source(), document2))) {
               block.$remove_sub("callouts");
             }
           }
@@ -27264,7 +27264,7 @@ function Asciidoctor(moduleConfig) {
           ;
           return list_block;
         });
-        $defs(self2, "$catalog_callouts", function $$catalog_callouts(text, document) {
+        $defs(self2, "$catalog_callouts", function $$catalog_callouts(text, document2) {
           var found = nil, autonum = nil;
           found = false;
           autonum = 0;
@@ -27272,7 +27272,7 @@ function Asciidoctor(moduleConfig) {
             $send(text, "scan", [$$("CalloutScanRx")], function $$10() {
               var $a;
               if (!$truthy((($a = $gvars["~"]) === nil ? nil : $a["$[]"](0))["$start_with?"]("\\"))) {
-                document.$callouts().$register($eqeq(($a = $gvars["~"]) === nil ? nil : $a["$[]"](2), ".") ? (autonum = $rb_plus(autonum, 1)).$to_s() : ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2));
+                document2.$callouts().$register($eqeq(($a = $gvars["~"]) === nil ? nil : $a["$[]"](2), ".") ? (autonum = $rb_plus(autonum, 1)).$to_s() : ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2));
               }
               ;
               return found = true;
@@ -27298,13 +27298,13 @@ function Asciidoctor(moduleConfig) {
           ;
           return nil;
         }, -5);
-        $defs(self2, "$catalog_inline_anchors", function $$catalog_inline_anchors(text, block, document, reader) {
+        $defs(self2, "$catalog_inline_anchors", function $$catalog_inline_anchors(text, block, document2, reader) {
           var self3 = this;
           if ($truthy(text["$include?"]("[[")) || $truthy(text["$include?"]("or:"))) {
             $send(text, "scan", [$$("InlineAnchorScanRx")], function $$11() {
               var $a, self4 = $$11.$$s == null ? this : $$11.$$s, id = nil, reftext = nil, location = nil, offset = nil;
               if ($truthy(id = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](1))) {
-                if ($truthy(reftext = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2)) && $truthy(reftext["$include?"]($$("ATTR_REF_HEAD"))) && $truthy((reftext = document.$sub_attributes(reftext))["$empty?"]())) {
+                if ($truthy(reftext = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2)) && $truthy(reftext["$include?"]($$("ATTR_REF_HEAD"))) && $truthy((reftext = document2.$sub_attributes(reftext))["$empty?"]())) {
                   return nil;
                 }
               } else {
@@ -27313,11 +27313,11 @@ function Asciidoctor(moduleConfig) {
                   if ($truthy(reftext["$include?"]("]"))) {
                     reftext = reftext.$gsub("\\]", "]");
                     if ($truthy(reftext["$include?"]($$("ATTR_REF_HEAD")))) {
-                      reftext = document.$sub_attributes(reftext);
+                      reftext = document2.$sub_attributes(reftext);
                     }
                     ;
                   } else if ($truthy(reftext["$include?"]($$("ATTR_REF_HEAD")))) {
-                    if ($truthy((reftext = document.$sub_attributes(reftext))["$empty?"]())) {
+                    if ($truthy((reftext = document2.$sub_attributes(reftext))["$empty?"]())) {
                       reftext = nil;
                     }
                   }
@@ -27325,7 +27325,7 @@ function Asciidoctor(moduleConfig) {
                 ;
               }
               ;
-              if ($truthy(document.$register("refs", [id, $$("Inline").$new(block, "anchor", reftext, $hash2(["type", "id"], { "type": "ref", "id": id }))]))) {
+              if ($truthy(document2.$register("refs", [id, $$("Inline").$new(block, "anchor", reftext, $hash2(["type", "id"], { "type": "ref", "id": id }))]))) {
                 return nil;
               } else {
                 location = reader.$cursor_at_mark();
@@ -27720,16 +27720,16 @@ function Asciidoctor(moduleConfig) {
           return buffer;
         }, -3);
         $defs(self2, "$initialize_section", function $$initialize_section(reader, parent, attributes) {
-          var $a, $b, self3 = this, document = nil, book = nil, doctype = nil, source_location = nil, sect_style = nil, sect_id = nil, sect_reftext = nil, sect_title = nil, sect_level = nil, sect_atx = nil, sect_name = nil, sect_special = nil, sect_numbered = nil, section = nil, $ret_or_1 = nil, id = nil, generated_id = nil;
+          var $a, $b, self3 = this, document2 = nil, book = nil, doctype = nil, source_location = nil, sect_style = nil, sect_id = nil, sect_reftext = nil, sect_title = nil, sect_level = nil, sect_atx = nil, sect_name = nil, sect_special = nil, sect_numbered = nil, section = nil, $ret_or_1 = nil, id = nil, generated_id = nil;
           if (attributes == null) attributes = $hash2([], {});
-          document = parent.$document();
-          book = (doctype = document.$doctype())["$=="]("book");
-          if ($truthy(document.$sourcemap())) {
+          document2 = parent.$document();
+          book = (doctype = document2.$doctype())["$=="]("book");
+          if ($truthy(document2.$sourcemap())) {
             source_location = reader.$cursor();
           }
           ;
           sect_style = attributes["$[]"](1);
-          $b = self3.$parse_section_title(reader, document, attributes["$[]"]("id")), $a = $to_ary($b), sect_id = $a[0] == null ? nil : $a[0], sect_reftext = $a[1] == null ? nil : $a[1], sect_title = $a[2] == null ? nil : $a[2], sect_level = $a[3] == null ? nil : $a[3], sect_atx = $a[4] == null ? nil : $a[4], $b;
+          $b = self3.$parse_section_title(reader, document2, attributes["$[]"]("id")), $a = $to_ary($b), sect_id = $a[0] == null ? nil : $a[0], sect_reftext = $a[1] == null ? nil : $a[1], sect_title = $a[2] == null ? nil : $a[2], sect_level = $a[3] == null ? nil : $a[3], sect_atx = $a[4] == null ? nil : $a[4], $b;
           if ($truthy(sect_style)) {
             if ($truthy(book) && $eqeq(sect_style, "abstract")) {
               $a = ["chapter", 1], sect_name = $a[0], sect_level = $a[1], $a;
@@ -27761,22 +27761,22 @@ function Asciidoctor(moduleConfig) {
             section["$special="](true);
             if ($truthy(sect_numbered)) {
               section["$numbered="](true);
-            } else if ($eqeq(document.$attributes()["$[]"]("sectnums"), "all")) {
+            } else if ($eqeq(document2.$attributes()["$[]"]("sectnums"), "all")) {
               section["$numbered="]($truthy(book) && $eqeq(sect_level, 1) ? "chapter" : true);
             }
             ;
-          } else if ($truthy(document.$attributes()["$[]"]("sectnums")) && $truthy($rb_gt(sect_level, 0))) {
+          } else if ($truthy(document2.$attributes()["$[]"]("sectnums")) && $truthy($rb_gt(sect_level, 0))) {
             section["$numbered="]($truthy(section.$special()) ? $truthy($ret_or_1 = parent.$numbered()) || $ret_or_1 : true);
-          } else if ($truthy(book) && $eqeq(sect_level, 0) && $truthy(document.$attributes()["$[]"]("partnums"))) {
+          } else if ($truthy(book) && $eqeq(sect_level, 0) && $truthy(document2.$attributes()["$[]"]("partnums"))) {
             section["$numbered="](true);
           }
           ;
-          if ($truthy(id = $truthy($ret_or_1 = section.$id()) ? $ret_or_1 : ($a = [$truthy(document.$attributes()["$key?"]("sectids")) ? generated_id = $$("Section").$generate_id(section.$title(), document) : nil], $send(section, "id=", $a), $a[$a.length - 1]))) {
+          if ($truthy(id = $truthy($ret_or_1 = section.$id()) ? $ret_or_1 : ($a = [$truthy(document2.$attributes()["$key?"]("sectids")) ? generated_id = $$("Section").$generate_id(section.$title(), document2) : nil], $send(section, "id=", $a), $a[$a.length - 1]))) {
             if (!($truthy(generated_id) || $not(sect_title["$include?"]($$("ATTR_REF_HEAD"))))) {
               section.$title();
             }
             ;
-            if (!$truthy(document.$register("refs", [id, section]))) {
+            if (!$truthy(document2.$register("refs", [id, section]))) {
               self3.$logger().$warn(self3.$message_with_context("id assigned to section already in use: " + id, $hash2(["source_location"], { "source_location": reader.$cursor_at_line($rb_minus(reader.$lineno(), $truthy(sect_atx) ? 1 : 2)) })));
             }
             ;
@@ -27843,7 +27843,7 @@ function Asciidoctor(moduleConfig) {
             return nil;
           }
         });
-        $defs(self2, "$parse_section_title", function $$parse_section_title(reader, document, sect_id) {
+        $defs(self2, "$parse_section_title", function $$parse_section_title(reader, document2, sect_id) {
           var $a, $b, self3 = this, sect_reftext = nil, line1 = nil, $ret_or_1 = nil, sect_level = nil, sect_title = nil, atx = nil, line2_len = nil, line2_ch0 = nil, line2 = nil;
           if (sect_id == null) sect_id = nil;
           sect_reftext = nil;
@@ -27869,8 +27869,8 @@ function Asciidoctor(moduleConfig) {
             self3.$raise("Unrecognized section at " + reader.$cursor_at_prev_line());
           }
           ;
-          if ($truthy(document["$attr?"]("leveloffset"))) {
-            sect_level = $rb_plus(sect_level, document.$attr("leveloffset").$to_i());
+          if ($truthy(document2["$attr?"]("leveloffset"))) {
+            sect_level = $rb_plus(sect_level, document2.$attr("leveloffset").$to_i());
             if ($truthy($rb_lt(sect_level, 0))) {
               sect_level = 0;
             }
@@ -27879,15 +27879,15 @@ function Asciidoctor(moduleConfig) {
           ;
           return [sect_id, sect_reftext, sect_title, sect_level, atx];
         }, -3);
-        $defs(self2, "$parse_header_metadata", function $$parse_header_metadata(reader, document, retrieve) {
+        $defs(self2, "$parse_header_metadata", function $$parse_header_metadata(reader, document2, retrieve) {
           var $a, self3 = this, doc_attrs = nil, $ret_or_1 = nil, authorcount = nil, implicit_author_metadata = nil, implicit_author = nil, implicit_authorinitials = nil, implicit_authors = nil, rev_line = nil, match = nil, rev_metadata = nil, component = nil, author_line = nil, author_metadata = nil, authors = nil, author_idx = nil, author_key = nil, explicit = nil, sparse = nil, author_override = nil;
-          if (document == null) document = nil;
+          if (document2 == null) document2 = nil;
           if (retrieve == null) retrieve = true;
-          doc_attrs = $truthy($ret_or_1 = document) ? document.$attributes() : $ret_or_1;
-          self3.$process_attribute_entries(reader, document);
+          doc_attrs = $truthy($ret_or_1 = document2) ? document2.$attributes() : $ret_or_1;
+          self3.$process_attribute_entries(reader, document2);
           if ($truthy(reader["$has_more_lines?"]()) && $not(reader["$next_line_empty?"]())) {
             authorcount = (implicit_author_metadata = self3.$process_authors(reader.$read_line())).$delete("authorcount");
-            if ($truthy(document) && $truthy($rb_gt(($a = ["authorcount", authorcount], $send(doc_attrs, "[]=", $a), $a[$a.length - 1]), 0))) {
+            if ($truthy(document2) && $truthy($rb_gt(($a = ["authorcount", authorcount], $send(doc_attrs, "[]=", $a), $a[$a.length - 1]), 0))) {
               $send(implicit_author_metadata, "each", [], function $$22(key, val) {
                 var $b;
                 if (key == null) key = nil;
@@ -27895,7 +27895,7 @@ function Asciidoctor(moduleConfig) {
                 if ($truthy(doc_attrs["$key?"](key))) {
                   return nil;
                 } else {
-                  return $b = [key, document.$apply_header_subs(val)], $send(doc_attrs, "[]=", $b), $b[$b.length - 1];
+                  return $b = [key, document2.$apply_header_subs(val)], $send(doc_attrs, "[]=", $b), $b[$b.length - 1];
                 }
                 ;
               });
@@ -27905,7 +27905,7 @@ function Asciidoctor(moduleConfig) {
             }
             ;
             implicit_author_metadata["$[]="]("authorcount", authorcount);
-            self3.$process_attribute_entries(reader, document);
+            self3.$process_attribute_entries(reader, document2);
             if ($truthy(reader["$has_more_lines?"]()) && $not(reader["$next_line_empty?"]())) {
               rev_line = reader.$read_line();
               if ($truthy(match = $$("RevisionInfoLineRx").$match(rev_line))) {
@@ -27926,7 +27926,7 @@ function Asciidoctor(moduleConfig) {
                   rev_metadata["$[]="]("revremark", match["$[]"](3).$rstrip());
                 }
                 ;
-                if ($truthy(document) && $not(rev_metadata["$empty?"]())) {
+                if ($truthy(document2) && $not(rev_metadata["$empty?"]())) {
                   $send(rev_metadata, "each", [], function $$23(key, val) {
                     var $b;
                     if (key == null) key = nil;
@@ -27934,7 +27934,7 @@ function Asciidoctor(moduleConfig) {
                     if ($truthy(doc_attrs["$key?"](key))) {
                       return nil;
                     } else {
-                      return $b = [key, document.$apply_header_subs(val)], $send(doc_attrs, "[]=", $b), $b[$b.length - 1];
+                      return $b = [key, document2.$apply_header_subs(val)], $send(doc_attrs, "[]=", $b), $b[$b.length - 1];
                     }
                     ;
                   });
@@ -27946,13 +27946,13 @@ function Asciidoctor(moduleConfig) {
               ;
             }
             ;
-            self3.$process_attribute_entries(reader, document);
+            self3.$process_attribute_entries(reader, document2);
             reader.$skip_blank_lines();
           } else {
             implicit_author_metadata = $hash2([], {});
           }
           ;
-          if ($truthy(document)) {
+          if ($truthy(document2)) {
             if ($truthy(doc_attrs["$key?"]("author")) && $neqeq(author_line = doc_attrs["$[]"]("author"), implicit_author)) {
               author_metadata = self3.$process_authors(author_line, true, false);
               if ($neqeq(doc_attrs["$[]"]("authorinitials"), implicit_authorinitials)) {
@@ -28118,11 +28118,11 @@ function Asciidoctor(moduleConfig) {
           author_metadata["$[]="]("authorcount", author_idx);
           return author_metadata;
         }, -2);
-        $defs(self2, "$parse_block_metadata_lines", function $$parse_block_metadata_lines(reader, document, attributes, options) {
+        $defs(self2, "$parse_block_metadata_lines", function $$parse_block_metadata_lines(reader, document2, attributes, options) {
           var self3 = this, $ret_or_1 = nil;
           if (attributes == null) attributes = $hash2([], {});
           if (options == null) options = $hash2([], {});
-          while ($truthy(self3.$parse_block_metadata_line(reader, document, attributes, options))) {
+          while ($truthy(self3.$parse_block_metadata_line(reader, document2, attributes, options))) {
             reader.$shift();
             if ($truthy($ret_or_1 = reader.$skip_blank_lines())) {
               $ret_or_1;
@@ -28134,7 +28134,7 @@ function Asciidoctor(moduleConfig) {
           ;
           return attributes;
         }, -3);
-        $defs(self2, "$parse_block_metadata_line", function $$parse_block_metadata_line(reader, document, attributes, options) {
+        $defs(self2, "$parse_block_metadata_line", function $$parse_block_metadata_line(reader, document2, attributes, options) {
           var $a, self3 = this, normal = nil, next_line = nil, reftext = nil, current_style = nil, $ret_or_1 = nil, ll = nil;
           if ($gvars["~"] == null) $gvars["~"] = nil;
           if (options == null) options = $hash2([], {});
@@ -28144,14 +28144,14 @@ function Asciidoctor(moduleConfig) {
                 if ($truthy(next_line["$end_with?"]("]]")) && $truthy($$("BlockAnchorRx")["$=~"](next_line))) {
                   attributes["$[]="]("id", ($a = $gvars["~"]) === nil ? nil : $a["$[]"](1));
                   if ($truthy(reftext = ($a = $gvars["~"]) === nil ? nil : $a["$[]"](2))) {
-                    attributes["$[]="]("reftext", $truthy(reftext["$include?"]($$("ATTR_REF_HEAD"))) ? document.$sub_attributes(reftext) : reftext);
+                    attributes["$[]="]("reftext", $truthy(reftext["$include?"]($$("ATTR_REF_HEAD"))) ? document2.$sub_attributes(reftext) : reftext);
                   }
                   ;
                   return true;
                 }
               } else if ($truthy(next_line["$end_with?"]("]")) && $truthy($$("BlockAttributeListRx")["$=~"](next_line))) {
                 current_style = attributes["$[]"](1);
-                if ($truthy(document.$parse_attributes(($a = $gvars["~"]) === nil ? nil : $a["$[]"](1), [], $hash2(["sub_input", "sub_result", "into"], { "sub_input": true, "sub_result": true, "into": attributes }))["$[]"](1))) {
+                if ($truthy(document2.$parse_attributes(($a = $gvars["~"]) === nil ? nil : $a["$[]"](1), [], $hash2(["sub_input", "sub_result", "into"], { "sub_input": true, "sub_result": true, "into": attributes }))["$[]"](1))) {
                   attributes["$[]="](1, $truthy($ret_or_1 = self3.$parse_style_attribute(attributes, reader)) ? $ret_or_1 : current_style);
                 }
                 ;
@@ -28176,24 +28176,24 @@ function Asciidoctor(moduleConfig) {
                 }
               }
             } else if ($truthy(normal) && $truthy(next_line["$start_with?"](":")) && $truthy($$("AttributeEntryRx")["$=~"](next_line))) {
-              self3.$process_attribute_entry(reader, document, attributes, $gvars["~"]);
+              self3.$process_attribute_entry(reader, document2, attributes, $gvars["~"]);
               return true;
             }
           }
           ;
           return nil;
         }, -4);
-        $defs(self2, "$process_attribute_entries", function $$process_attribute_entries(reader, document, attributes) {
+        $defs(self2, "$process_attribute_entries", function $$process_attribute_entries(reader, document2, attributes) {
           var self3 = this;
           if (attributes == null) attributes = nil;
           reader.$skip_comment_lines();
-          while ($truthy(self3.$process_attribute_entry(reader, document, attributes))) {
+          while ($truthy(self3.$process_attribute_entry(reader, document2, attributes))) {
             reader.$shift();
             reader.$skip_comment_lines();
           }
           ;
         }, -3);
-        $defs(self2, "$process_attribute_entry", function $$process_attribute_entry(reader, document, attributes, match) {
+        $defs(self2, "$process_attribute_entry", function $$process_attribute_entry(reader, document2, attributes, match) {
           var $a, self3 = this, value = nil, con = nil, $ret_or_1 = nil, next_line = nil, $ret_or_2 = nil, keep_open = nil;
           if (attributes == null) attributes = nil;
           if (match == null) match = nil;
@@ -28217,7 +28217,7 @@ function Asciidoctor(moduleConfig) {
               ;
             }
             ;
-            self3.$store_attribute(match["$[]"](1), value, document, attributes);
+            self3.$store_attribute(match["$[]"](1), value, document2, attributes);
             return true;
           } else {
             return nil;
@@ -29783,22 +29783,22 @@ function Asciidoctor(moduleConfig) {
         var $nesting3 = [self2].concat($parent_nesting2), $$2 = Opal2.$r($nesting3), $proto = self2.$$prototype;
         $proto.include_stack = $proto.lines = $proto.file = $proto.dir = $proto.path = $proto.lineno = $proto.maxdepth = $proto.process_lines = $proto.includes = $proto.document = $proto.unescape_next_line = $proto.include_processor_extensions = $proto.look_ahead = $proto.skipping = $proto.conditional_stack = nil;
         self2.$attr_reader("include_stack");
-        $def(self2, "$initialize", function $$initialize(document, data, cursor, opts) {
+        $def(self2, "$initialize", function $$initialize(document2, data, cursor, opts) {
           var $yield = $$initialize.$$p || nil, self3 = this, default_include_depth = nil, $ret_or_1 = nil;
           $$initialize.$$p = null;
           if (data == null) data = nil;
           if (cursor == null) cursor = nil;
           if (opts == null) opts = $hash2([], {});
-          self3.document = document;
+          self3.document = document2;
           $send2(self3, $find_super(self3, "initialize", $$initialize, false, true), "initialize", [data, cursor, opts], null);
-          if ($truthy($rb_gt(default_include_depth = ($truthy($ret_or_1 = document.$attributes()["$[]"]("max-include-depth")) ? $ret_or_1 : 64).$to_i(), 0))) {
+          if ($truthy($rb_gt(default_include_depth = ($truthy($ret_or_1 = document2.$attributes()["$[]"]("max-include-depth")) ? $ret_or_1 : 64).$to_i(), 0))) {
             self3.maxdepth = $hash2(["abs", "curr", "rel"], { "abs": default_include_depth, "curr": default_include_depth, "rel": default_include_depth });
           } else {
             self3.maxdepth = nil;
           }
           ;
           self3.include_stack = [];
-          self3.includes = document.$catalog()["$[]"]("includes");
+          self3.includes = document2.$catalog()["$[]"]("includes");
           self3.skipping = false;
           self3.conditional_stack = [];
           return self3.include_processor_extensions = nil;
@@ -30733,9 +30733,9 @@ function Asciidoctor(moduleConfig) {
             return $send2(self3, $find_super(self3, "to_s", $$to_s, false, true), "to_s", [], $yield);
           }
         });
-        return $defs(self2, "$generate_id", function $$generate_id(title, document) {
+        return $defs(self2, "$generate_id", function $$generate_id(title, document2) {
           var $a, attrs = nil, pre = nil, $ret_or_1 = nil, sep = nil, no_sep = nil, sep_sub = nil, gen_id = nil, ids = nil, cnt = nil, candidate_id = nil;
-          attrs = document.$attributes();
+          attrs = document2.$attributes();
           pre = $truthy($ret_or_1 = attrs["$[]"]("idprefix")) ? $ret_or_1 : "_";
           if ($truthy(sep = attrs["$[]"]("idseparator"))) {
             if ($eqeq(sep.$length(), 1) || $not(no_sep = sep["$empty?"]()) && $truthy(sep = ($a = ["idseparator", sep.$chr()], $send(attrs, "[]=", $a), $a[$a.length - 1]))) {
@@ -30760,8 +30760,8 @@ function Asciidoctor(moduleConfig) {
             ;
           }
           ;
-          if ($truthy(document.$catalog()["$[]"]("refs")["$key?"](gen_id))) {
-            ids = document.$catalog()["$[]"]("refs");
+          if ($truthy(document2.$catalog()["$[]"]("refs")["$key?"](gen_id))) {
+            ids = document2.$catalog()["$[]"]("refs");
             cnt = $$2("Compliance").$unique_id_start_index();
             while ($truthy(ids["$[]"](candidate_id = "" + gen_id + sep + cnt))) {
               cnt = $rb_plus(cnt, 1);
@@ -34026,7 +34026,7 @@ function Asciidoctor(moduleConfig) {
         (function($base3, $super, $parent_nesting3) {
           var self3 = $klass($base3, $super, "Preprocessor");
           var $nesting4 = [self3].concat($parent_nesting3), $$2 = Opal2.$r($nesting4);
-          return $def(self3, "$process", function $$process(document, reader) {
+          return $def(self3, "$process", function $$process(document2, reader) {
             var self4 = this;
             return self4.$raise($$$("NotImplementedError"), "" + $$2("Preprocessor") + " subclass " + self4.$class() + " must implement the #process method");
           });
@@ -34035,7 +34035,7 @@ function Asciidoctor(moduleConfig) {
         (function($base3, $super, $parent_nesting3) {
           var self3 = $klass($base3, $super, "TreeProcessor");
           var $nesting4 = [self3].concat($parent_nesting3), $$2 = Opal2.$r($nesting4);
-          return $def(self3, "$process", function $$process(document) {
+          return $def(self3, "$process", function $$process(document2) {
             var self4 = this;
             return self4.$raise($$$("NotImplementedError"), "" + $$2("TreeProcessor") + " subclass " + self4.$class() + " must implement the #process method");
           });
@@ -34045,7 +34045,7 @@ function Asciidoctor(moduleConfig) {
         (function($base3, $super, $parent_nesting3) {
           var self3 = $klass($base3, $super, "Postprocessor");
           var $nesting4 = [self3].concat($parent_nesting3), $$2 = Opal2.$r($nesting4);
-          return $def(self3, "$process", function $$process(document, output) {
+          return $def(self3, "$process", function $$process(document2, output) {
             var self4 = this;
             return self4.$raise($$$("NotImplementedError"), "" + $$2("Postprocessor") + " subclass " + self4.$class() + " must implement the #process method");
           });
@@ -34054,7 +34054,7 @@ function Asciidoctor(moduleConfig) {
         (function($base3, $super, $parent_nesting3) {
           var self3 = $klass($base3, $super, "IncludeProcessor");
           var $nesting4 = [self3].concat($parent_nesting3), $$2 = Opal2.$r($nesting4);
-          $def(self3, "$process", function $$process(document, reader, target, attributes) {
+          $def(self3, "$process", function $$process(document2, reader, target, attributes) {
             var self4 = this;
             return self4.$raise($$$("NotImplementedError"), "" + $$2("IncludeProcessor") + " subclass " + self4.$class() + " must implement the #process method");
           });
@@ -34102,7 +34102,7 @@ function Asciidoctor(moduleConfig) {
             }
             ;
           }, -1);
-          return $def(self3, "$process", function $$process(document) {
+          return $def(self3, "$process", function $$process(document2) {
             var self4 = this;
             return self4.$raise($$$("NotImplementedError"), "" + $$2("DocinfoProcessor") + " subclass " + self4.$class() + " must implement the #process method");
           });
@@ -34321,13 +34321,13 @@ function Asciidoctor(moduleConfig) {
             self4.preprocessor_extensions = self4.tree_processor_extensions = self4.postprocessor_extensions = self4.include_processor_extensions = self4.docinfo_processor_extensions = self4.block_extensions = self4.block_macro_extensions = self4.inline_macro_extensions = nil;
             return self4.document = nil;
           }, -1);
-          $def(self3, "$activate", function $$activate(document) {
+          $def(self3, "$activate", function $$activate(document2) {
             var self4 = this, ext_groups = nil;
             if ($truthy(self4.document)) {
               self4.$reset();
             }
             ;
-            self4.document = document;
+            self4.document = document2;
             if (!$truthy((ext_groups = $rb_plus($$2("Extensions").$groups().$values(), self4.groups.$values()))["$empty?"]())) {
               $send(ext_groups, "each", [], function $$8(group) {
                 var self5 = $$8.$$s == null ? this : $$8.$$s, $ret_or_1 = nil;
@@ -37431,6 +37431,9 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
   constructor(leaf, plugin) {
     super(leaf);
     this.softWrap = false;
+    this.findIndex = 0;
+    this.findRanges = [];
+    this.findSourceHits = [];
     this.plugin = plugin;
     this.mode = "preview";
   }
@@ -37499,12 +37502,28 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
     container.addClass("adoc-view-container");
     this.toolbarEl = container.createEl("div", { cls: "adoc-toolbar" });
     this.buildToolbar();
+    this.buildFindBar(container);
+    this.containerEl.addEventListener("keydown", (e2) => {
+      const mod = e2.ctrlKey || e2.metaKey;
+      if (mod && !e2.shiftKey && !e2.altKey && (e2.code === "KeyF" || e2.key.toLowerCase() === "f")) {
+        e2.preventDefault();
+        e2.stopPropagation();
+        this.openFind();
+      } else if (e2.key === "F3" && this.isFindOpen()) {
+        e2.preventDefault();
+        this.stepFind(e2.shiftKey ? -1 : 1);
+      } else if (e2.key === "Escape" && this.isFindOpen()) {
+        e2.preventDefault();
+        this.closeFind();
+      }
+    }, true);
     this.sourceEl = container.createEl("textarea", { cls: "adoc-source-editor" });
     this.sourceEl.spellcheck = false;
     this.sourceEl.addEventListener("input", () => {
       this.data = this.sourceEl.value;
       this.requestSave();
       this.plugin.broadcastContentChange(this.file, this.data);
+      if (this.isFindOpen()) this.runFind(false);
     });
     this.sourceEl.addEventListener("paste", (e2) => {
       var _a;
@@ -37518,7 +37537,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
         }
       }
     });
-    this.previewEl = container.createEl("div", { cls: "adoc-preview" });
+    this.previewEl = container.createEl("div", { cls: "adoc-preview", attr: { tabindex: "-1" } });
     this.addAction("book-open", "Toggle source / preview", () => this.toggleMode());
     this.registerEvent(
       this.app.vault.on("modify", async (file) => {
@@ -37540,6 +37559,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
   }
   onClose() {
     this.plugin.unregisterAdocView(this);
+    this.clearFindHighlights();
     return Promise.resolve();
   }
   // ── Toolbar ───────────────────────────────────────────────────────────────
@@ -37756,6 +37776,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
     } else {
       if (this.data) this.renderPreview();
     }
+    if (this.isFindOpen()) this.runFind(false);
   }
   renderPreview() {
     var _a;
@@ -37767,7 +37788,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
           showtitle: "",
           icons: "font",
           "source-highlighter": "highlight.js",
-          stem: ""
+          stem: "@"
         }
       });
       const parsed = new DOMParser().parseFromString(html, "text/html");
@@ -37775,7 +37796,10 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
       Array.from(parsed.body.childNodes).forEach((n) => this.previewEl.appendChild(n));
       this.resolveImages();
       this.handleLinks();
-      void this.renderMathFormulas();
+      void this.renderMathFormulas().then(() => {
+        if (this.isFindOpen()) this.runFind(false);
+      });
+      if (this.isFindOpen()) this.runFind(false);
       const pending = this.plugin.pendingAnchor;
       if (pending && this.file && pending.file === this.file) {
         this.plugin.pendingAnchor = null;
@@ -37852,9 +37876,11 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
   //
   // Flow: strip Asciidoctor delimiters → convert AsciiMath to TeX → renderMath → finishRenderMath
   async renderMathFormulas() {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (!this.previewEl) return;
-    if (!this.previewEl.querySelector(".stem, .stemblock")) return;
+    const hasBlocks = !!this.previewEl.querySelector(".stem, .stemblock");
+    const txt = (_a = this.previewEl.textContent) != null ? _a : "";
+    if (!hasBlocks && !txt.includes("\\$") && !txt.includes("\\(")) return;
     await (0, import_obsidian.loadMathJax)();
     const stems = Array.from(
       this.previewEl.querySelectorAll(".stem, .stemblock")
@@ -37864,8 +37890,8 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
       if (!el.isConnected) continue;
       if (el.querySelector("mjx-container")) continue;
       const isBlock = el.classList.contains("stemblock");
-      const srcEl = isBlock ? (_a = el.querySelector(".content")) != null ? _a : el : el;
-      let src = (_c = (_b = srcEl.textContent) == null ? void 0 : _b.trim()) != null ? _c : "";
+      const srcEl = isBlock ? (_b = el.querySelector(".content")) != null ? _b : el : el;
+      let src = (_d = (_c = srcEl.textContent) == null ? void 0 : _c.trim()) != null ? _d : "";
       let display = isBlock;
       if (src.startsWith("\\(") && src.endsWith("\\)")) {
         src = src.slice(2, -2).trim();
@@ -37889,7 +37915,7 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
         console.error("[AsciiDoc Live] renderMath error:", e2, { src, display });
       }
     }
-    await (0, import_obsidian.finishRenderMath)();
+    this.renderInlineMath(toTypeset);
     if (toTypeset.length > 0) {
       const MJ = window.MathJax;
       if (typeof (MJ == null ? void 0 : MJ.typesetPromise) === "function") {
@@ -37899,6 +37925,195 @@ var AdocView = class _AdocView extends import_obsidian.TextFileView {
           console.debug("[AsciiDoc Live] MathJax.typesetPromise error:", e2);
         }
       }
+    }
+  }
+  // ---- Find in document ----
+  buildFindBar(container) {
+    this.findBarEl = container.createEl("div", { cls: "adoc-find-bar adoc-hidden" });
+    this.findInputEl = this.findBarEl.createEl("input", {
+      cls: "adoc-find-input",
+      attr: { type: "text", placeholder: "Find in document", spellcheck: "false" }
+    });
+    this.findCountEl = this.findBarEl.createEl("span", { cls: "adoc-find-count" });
+    const mk = (icon, title, fn) => {
+      const b = this.findBarEl.createEl("button", { cls: "adoc-toolbar-btn", attr: { title } });
+      (0, import_obsidian.setIcon)(b, icon);
+      b.addEventListener("mousedown", (e2) => {
+        e2.preventDefault();
+        fn();
+      });
+    };
+    mk("chevron-up", "Previous match (Shift+Enter)", () => this.stepFind(-1));
+    mk("chevron-down", "Next match (Enter)", () => this.stepFind(1));
+    mk("x", "Close (Esc)", () => this.closeFind());
+    this.findInputEl.addEventListener("input", () => this.runFind(true));
+    this.findInputEl.addEventListener("keydown", (e2) => {
+      if (e2.key === "Enter") {
+        e2.preventDefault();
+        this.stepFind(e2.shiftKey ? -1 : 1);
+      }
+    });
+  }
+  isFindOpen() {
+    return !!this.findBarEl && !this.findBarEl.hasClass("adoc-hidden");
+  }
+  openFind() {
+    var _a, _b;
+    if (!this.findBarEl) return;
+    let seed = "";
+    if (this.mode === "source") {
+      const ta = this.sourceEl;
+      seed = ta.value.slice(ta.selectionStart, ta.selectionEnd);
+    } else {
+      seed = (_b = (_a = window.getSelection()) == null ? void 0 : _a.toString()) != null ? _b : "";
+    }
+    if (seed && !seed.includes("\n")) this.findInputEl.value = seed;
+    this.findBarEl.removeClass("adoc-hidden");
+    this.findInputEl.focus();
+    this.findInputEl.select();
+    this.runFind(true);
+  }
+  closeFind() {
+    if (!this.findBarEl) return;
+    this.findBarEl.addClass("adoc-hidden");
+    this.clearFindHighlights();
+    this.findRanges = [];
+    this.findSourceHits = [];
+    if (this.mode === "source") this.sourceEl.focus();
+    else this.previewEl.focus();
+  }
+  clearFindHighlights() {
+    const hl = CSS.highlights;
+    hl == null ? void 0 : hl.delete("adoc-find");
+    hl == null ? void 0 : hl.delete("adoc-find-current");
+  }
+  runFind(reset) {
+    var _a;
+    const query = this.findInputEl.value;
+    this.clearFindHighlights();
+    this.findRanges = [];
+    this.findSourceHits = [];
+    if (!query) {
+      this.findCountEl.setText("");
+      return;
+    }
+    const needle = query.toLowerCase();
+    if (this.mode === "source") {
+      const hay = this.sourceEl.value.toLowerCase();
+      let i = hay.indexOf(needle);
+      while (i !== -1) {
+        this.findSourceHits.push(i);
+        i = hay.indexOf(needle, i + Math.max(1, needle.length));
+      }
+      if (reset) {
+        const from = this.sourceEl.selectionStart;
+        const idx = this.findSourceHits.findIndex((p) => p >= from);
+        this.findIndex = idx === -1 ? 0 : idx;
+      }
+    } else {
+      const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        const parent = n.parentElement;
+        if (parent == null ? void 0 : parent.closest("mjx-container, script, style")) continue;
+        const text = ((_a = n.nodeValue) != null ? _a : "").toLowerCase();
+        let i = text.indexOf(needle);
+        while (i !== -1) {
+          const r = document.createRange();
+          r.setStart(n, i);
+          r.setEnd(n, i + needle.length);
+          this.findRanges.push(r);
+          i = text.indexOf(needle, i + Math.max(1, needle.length));
+        }
+      }
+      if (reset) this.findIndex = 0;
+    }
+    const total = this.mode === "source" ? this.findSourceHits.length : this.findRanges.length;
+    if (this.findIndex >= total) this.findIndex = 0;
+    this.showFindCurrent(reset);
+  }
+  stepFind(dir) {
+    const total = this.mode === "source" ? this.findSourceHits.length : this.findRanges.length;
+    if (total === 0) {
+      this.runFind(true);
+      return;
+    }
+    this.findIndex = (this.findIndex + dir + total) % total;
+    this.showFindCurrent(true);
+  }
+  showFindCurrent(scroll) {
+    var _a;
+    const total = this.mode === "source" ? this.findSourceHits.length : this.findRanges.length;
+    this.findCountEl.setText(total ? `${this.findIndex + 1}/${total}` : "No results");
+    if (!total) return;
+    if (this.mode === "source") {
+      const ta = this.sourceEl;
+      const start = this.findSourceHits[this.findIndex];
+      const end = start + this.findInputEl.value.length;
+      if (scroll) {
+        const full = ta.value;
+        ta.value = full.slice(0, start);
+        ta.scrollTop = ta.scrollHeight;
+        const target = Math.max(0, ta.scrollTop - ta.clientHeight / 2);
+        ta.value = full;
+        ta.scrollTop = target;
+      }
+      ta.setSelectionRange(start, end);
+      return;
+    }
+    const HL = window.Highlight;
+    const hl = CSS.highlights;
+    if (HL && hl) {
+      hl.set("adoc-find", new HL(...this.findRanges));
+      hl.set("adoc-find-current", new HL(this.findRanges[this.findIndex]));
+    }
+    if (scroll) {
+      (_a = this.findRanges[this.findIndex].startContainer.parentElement) == null ? void 0 : _a.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }
+  renderInlineMath(toTypeset) {
+    var _a, _b, _c, _d, _e;
+    const re = /\\\$([^\n]+?)\\\$|\\\(([^\n]+?)\\\)/g;
+    const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      const t2 = n;
+      const v = (_a = t2.nodeValue) != null ? _a : "";
+      if (!v.includes("\\$") && !v.includes("\\(")) continue;
+      if ((_b = t2.parentElement) == null ? void 0 : _b.closest("pre, code, .stemblock, mjx-container, script, style")) continue;
+      nodes.push(t2);
+    }
+    for (const t2 of nodes) {
+      const v = (_c = t2.nodeValue) != null ? _c : "";
+      const frag = document.createDocumentFragment();
+      let last = 0;
+      let found = false;
+      re.lastIndex = 0;
+      for (let m = re.exec(v); m; m = re.exec(v)) {
+        let tex = ((_e = (_d = m[1]) != null ? _d : m[2]) != null ? _e : "").trim();
+        if (!tex) continue;
+        if (m[1] !== void 0 && !tex.includes("\\")) {
+          try {
+            tex = _am2tex.parse(tex);
+          } catch (e2) {
+          }
+        }
+        try {
+          const rendered = (0, import_obsidian.renderMath)(tex, false);
+          frag.appendChild(document.createTextNode(v.slice(last, m.index)));
+          const span = document.createElement("span");
+          span.className = "adoc-inline-math";
+          span.appendChild(rendered);
+          frag.appendChild(span);
+          toTypeset.push(span);
+          last = m.index + m[0].length;
+          found = true;
+        } catch (e2) {
+          console.error("[AsciiDoc Live] inline renderMath error:", e2, { tex });
+        }
+      }
+      if (!found) continue;
+      frag.appendChild(document.createTextNode(v.slice(last)));
+      t2.replaceWith(frag);
     }
   }
   // Resolve image src attributes to vault resource URLs.
