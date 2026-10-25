@@ -13,6 +13,7 @@ import {
     debounce,
     Debouncer,
     setIcon,
+    SettingDefinitionItem,
     loadMathJax,
     renderMath,
     finishRenderMath,
@@ -134,7 +135,7 @@ class AdocView extends TextFileView {
         container.addClass('adoc-view-container');
 
         // ── Toolbar ──────────────────────────────────────────────────────────
-        this.toolbarEl = container.createEl('div', { cls: 'adoc-toolbar' });
+        this.toolbarEl = container.createDiv({ cls: 'adoc-toolbar' });
         this.buildToolbar();
 
         // Find bar (Ctrl+F, works in both source and preview modes)
@@ -179,7 +180,7 @@ class AdocView extends TextFileView {
         });
 
         // ── Preview pane ─────────────────────────────────────────────────────
-        this.previewEl = container.createEl('div', { cls: 'adoc-preview', attr: { tabindex: '-1' } });
+        this.previewEl = container.createDiv({ cls: 'adoc-preview', attr: { tabindex: '-1' } });
 
         // ── Header toggle button ─────────────────────────────────────────────
         this.addAction('book-open', 'Toggle source / preview', () => this.toggleMode());
@@ -231,7 +232,7 @@ class AdocView extends TextFileView {
             return b;
         };
 
-        const sep = () => t.createEl('span', { cls: 'adoc-toolbar-sep' });
+        const sep = () => t.createSpan({ cls: 'adoc-toolbar-sep' });
 
         mkBtn('bold',          'B',    'Toggle bold',           'bold',      () => this.wrapOrInsert('*', '*', 'bold text'));
         mkBtn('italic',        'I',    'Toggle italic',         'italic',    () => this.wrapOrInsert('_', '_', 'italic text'));
@@ -482,12 +483,12 @@ class AdocView extends TextFileView {
             const pending = this.plugin.pendingAnchor;
             if (pending && this.file && pending.file === this.file) {
                 this.plugin.pendingAnchor = null;
-                requestAnimationFrame(() => this.scrollToAnchor(pending.id));
+                activeWindow.requestAnimationFrame(() => this.scrollToAnchor(pending.id));
             }
         } catch (e) {
             console.error('[AsciiDoc Live] Render error:', e);
             this.previewEl.empty();
-            const errEl = this.previewEl.createEl('div', { cls: 'adoc-render-error' });
+            const errEl = this.previewEl.createDiv({ cls: 'adoc-render-error' });
             errEl.createEl('strong', { text: 'Render error' });
             errEl.createEl('pre', { text: String(e) });
         }
@@ -554,7 +555,7 @@ class AdocView extends TextFileView {
             this.plugin.pendingAnchor = null;
             const view = leaf.view;
             if (view instanceof AdocView) {
-                requestAnimationFrame(() => view.scrollToAnchor(fragment));
+                activeWindow.requestAnimationFrame(() => view.scrollToAnchor(fragment));
             }
         }
     }
@@ -634,7 +635,8 @@ class AdocView extends TextFileView {
         // Inline stem:[], latexmath:[], asciimath:[] are emitted by Asciidoctor as raw
         // \(...\) or \$...\$ text inside paragraphs, so replace those text runs.
         this.renderInlineMath(toTypeset);
-        // Apply MathJax stylesheet for all rendered elements        await finishRenderMath();
+        // Apply MathJax stylesheet for all rendered elements
+        await finishRenderMath();
 
         // For inline math: ensure MathJax processes the newly attached containers
         // by triggering a typeset pass if the MathJax 3 API is available
@@ -654,12 +656,12 @@ class AdocView extends TextFileView {
     // ---- Find in document ----
 
     private buildFindBar(container: HTMLElement): void {
-        this.findBarEl = container.createEl('div', { cls: 'adoc-find-bar adoc-hidden' });
+        this.findBarEl = container.createDiv({ cls: 'adoc-find-bar adoc-hidden' });
         this.findInputEl = this.findBarEl.createEl('input', {
             cls: 'adoc-find-input',
             attr: { type: 'text', placeholder: 'Find in document', spellcheck: 'false' },
         });
-        this.findCountEl = this.findBarEl.createEl('span', { cls: 'adoc-find-count' });
+        this.findCountEl = this.findBarEl.createSpan({ cls: 'adoc-find-count' });
 
         const mk = (icon: string, title: string, fn: () => void) => {
             const b = this.findBarEl.createEl('button', { cls: 'adoc-toolbar-btn', attr: { title } });
@@ -690,7 +692,7 @@ class AdocView extends TextFileView {
             const ta = this.sourceEl;
             seed = ta.value.slice(ta.selectionStart, ta.selectionEnd);
         } else {
-            seed = window.getSelection()?.toString() ?? '';
+            seed = activeWindow.getSelection()?.toString() ?? '';
         }
         if (seed && !seed.includes('\n')) this.findInputEl.value = seed;
         this.findBarEl.removeClass('adoc-hidden');
@@ -739,14 +741,14 @@ class AdocView extends TextFileView {
                 this.findIndex = idx === -1 ? 0 : idx;
             }
         } else {
-            const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+            const walker = activeDocument.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
             for (let n = walker.nextNode(); n; n = walker.nextNode()) {
                 const parent = (n as Text).parentElement;
                 if (parent?.closest('mjx-container, script, style')) continue;
                 const text = (n.nodeValue ?? '').toLowerCase();
                 let i = text.indexOf(needle);
                 while (i !== -1) {
-                    const r = document.createRange();
+                    const r = activeDocument.createRange();
                     r.setStart(n, i);
                     r.setEnd(n, i + needle.length);
                     this.findRanges.push(r);
@@ -803,7 +805,7 @@ class AdocView extends TextFileView {
     }
     private renderInlineMath(toTypeset: HTMLElement[]): void {
         const re = /\\\$([^\n]+?)\\\$|\\\(([^\n]+?)\\\)/g;
-        const walker = document.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
+        const walker = activeDocument.createTreeWalker(this.previewEl, NodeFilter.SHOW_TEXT);
         const nodes: Text[] = [];
         for (let n = walker.nextNode(); n; n = walker.nextNode()) {
             const t = n as Text;
@@ -814,7 +816,7 @@ class AdocView extends TextFileView {
         }
         for (const t of nodes) {
             const v = t.nodeValue ?? '';
-            const frag = document.createDocumentFragment();
+            const frag = createFragment();
             let last = 0;
             let found = false;
             re.lastIndex = 0;
@@ -827,9 +829,8 @@ class AdocView extends TextFileView {
                 }
                 try {
                     const rendered = renderMath(tex, false);
-                    frag.appendChild(document.createTextNode(v.slice(last, m.index)));
-                    const span = document.createElement('span');
-                    span.className = 'adoc-inline-math';
+                    frag.appendChild(activeDocument.createTextNode(v.slice(last, m.index)));
+                    const span = createSpan({ cls: 'adoc-inline-math' });
                     span.appendChild(rendered);
                     frag.appendChild(span);
                     toTypeset.push(span);
@@ -840,7 +841,7 @@ class AdocView extends TextFileView {
                 }
             }
             if (!found) continue;
-            frag.appendChild(document.createTextNode(v.slice(last)));
+            frag.appendChild(activeDocument.createTextNode(v.slice(last)));
             t.replaceWith(frag);
         }
     }
@@ -953,7 +954,8 @@ export default class AdocPlugin extends Plugin {
     }
 
     async loadSettings(): Promise<void> {
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+        const saved = (await this.loadData()) as Partial<AdocPluginSettings> | null;
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
     }
 
     async saveSettings(): Promise<void> {
@@ -973,6 +975,23 @@ class AdocSettingTab extends PluginSettingTab {
         this.plugin = plugin;
     }
 
+    // Declarative settings (Obsidian 1.13+, enables settings search); display() below is the fallback.
+    getSettingDefinitions(): SettingDefinitionItem[] {
+        return [
+            {
+                name: 'Auto-refresh delay (ms)',
+                desc: 'How long to wait after the last keystroke before updating the preview',
+                control: {
+                    type: 'number',
+                    key: 'refreshDelay',
+                    defaultValue: 500,
+                    min: 100,
+                    placeholder: '500',
+                    validate: (v: number) => (v >= 100 ? undefined : 'Minimum is 100 ms'),
+                },
+            },
+        ];
+    }
     display(): void {
         const { containerEl } = this;
         containerEl.empty();

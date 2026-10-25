@@ -5,7 +5,7 @@
 
 /* ── View container ──────────────────────────────────────────────────────── */
 
-.adoc-hidden { display: none !important; }
+.adoc-view-container .adoc-hidden { display: none; }
 
 .adoc-view-container {
     display: flex;
@@ -655,27 +655,21 @@
     display: inline;
 }
 
-/* MathJax 3 CHTML output — adapt colours to active theme */
-.adoc-preview mjx-container {
+/* Inline math: stay in text flow */
+.adoc-preview .adoc-inline-math {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
     color: inherit;
 }
 
-/* Inline math: stay in text flow */
-.adoc-preview mjx-container:not([display="true"]) {
-    display: inline-block !important;
-    vertical-align: middle;
-    max-width: 100%;
-}
-
 /* Display (block) math */
-.adoc-preview mjx-container[display="true"] {
-    display: block !important;
+.adoc-preview .stemblock .content {
     text-align: center;
     margin: 0.6em 0;
     overflow-x: auto;
     max-width: 100%;
 }
-
 /* ── Footnotes ───────────────────────────────────────────────────────────── */
 .adoc-preview #footnotes {
     margin-top: 2em;
