@@ -739,6 +739,7 @@
 }
 .adoc-source-wrap .adoc-source-editor {
     position: relative;
+    z-index: 1;
     height: 100%;
 }
 .adoc-source-mirror {
@@ -746,6 +747,7 @@
     top: 0;
     left: 0;
     overflow: hidden;
+    z-index: 2;
     pointer-events: none;
     box-sizing: border-box;
     color: transparent;

@@ -255,6 +255,7 @@ class AdocView extends TextFileView {
         sep();
         mkBtn('clipboard',     'Fmt',  'Paste formatted text',  'paste',     () => { void this.pasteFormatted(); });
         sep();
+        mkBtn('search',        'Find', 'Find in document (Ctrl+F)', 'find',  () => this.openFind());
         mkBtn('wrap-text',     'Wrap', 'Toggle soft wrap',      'wrap',      () => this.toggleSoftWrap());
     }
 
@@ -830,7 +831,8 @@ class AdocView extends TextFileView {
                 const full = ta.value;
                 ta.value = full.slice(0, start);
                 ta.scrollTop = ta.scrollHeight;
-                const target = Math.max(0, ta.scrollTop - ta.clientHeight / 2);
+                const padB = parseFloat(getComputedStyle(ta).paddingBottom) || 0;
+                const target = Math.max(0, ta.scrollHeight - padB - ta.clientHeight / 2);
                 ta.value = full;
                 ta.scrollTop = target;
             }
